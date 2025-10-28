@@ -1,10 +1,10 @@
-<img src="https://craterdog.com/images/CraterDog.png" width="50%">
+[<img src="https://craterdog.com/images/CraterDog.png" width="30%">](https://craterdog.com)
 
-## Go Collection Framework
+## Go Essential Primitives
 
 ### Overview
 This project defines a Go based set of classes and interfaces that implement
-some useful high-level elemental data types:
+some useful high-level immutable primitive data types:
 
 **Elements**
  * `Angle`
@@ -28,7 +28,7 @@ some useful high-level elemental data types:
  * `Tag`
  * `Version`
 
-These classes provides a higher-level of abstraction than the low-level native
+These classes provide a higher-level of abstraction than the low-level native
 Go primitive data types.
 
 ### Quick Links

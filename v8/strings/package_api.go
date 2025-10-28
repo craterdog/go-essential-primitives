@@ -31,7 +31,7 @@ on interfaces, not on each other.
 package strings
 
 import (
-	uti "github.com/craterdog/go-missing-utilities/v8"
+	uti "github.com/craterdog/go-essential-utilities/v8"
 	reg "regexp"
 )
 
