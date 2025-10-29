@@ -13,7 +13,7 @@
 package module_test
 
 import (
-	ele "github.com/craterdog/go-essential-primitives/v8"
+	pri "github.com/craterdog/go-essential-primitives/v8"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	cmp "math/cmplx"
@@ -23,62 +23,62 @@ import (
 // ELEMENT
 
 func TestUnits(t *tes.T) {
-	ass.Equal(t, "Degrees", ele.Degrees.String())
-	ass.Equal(t, "Radians", ele.Radians.String())
-	ass.Equal(t, "Gradians", ele.Gradians.String())
+	ass.Equal(t, "Degrees", pri.Degrees.String())
+	ass.Equal(t, "Radians", pri.Radians.String())
+	ass.Equal(t, "Gradians", pri.Gradians.String())
 }
 
 func TestZeroAngles(t *tes.T) {
-	var v = ele.Angle(0)
+	var v = pri.Angle(0)
 	ass.Equal(t, 0.0, v.AsIntrinsic())
 	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, "~0", v.AsSource())
-	ass.Equal(t, v, ele.AngleClass().Zero())
+	ass.Equal(t, v, pri.AngleClass().Zero())
 
-	v = ele.Angle(2.0 * mat.Pi)
+	v = pri.Angle(2.0 * mat.Pi)
 	ass.Equal(t, 0.0, v.AsIntrinsic())
 	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, "~0", v.AsSource())
-	ass.Equal(t, v, ele.AngleClass().Zero())
+	ass.Equal(t, v, pri.AngleClass().Zero())
 
-	v = ele.AngleFromSource("~0")
+	v = pri.AngleFromSource("~0")
 	ass.Equal(t, "~0", v.AsSource())
-	ass.Equal(t, v, ele.AngleClass().Zero())
+	ass.Equal(t, v, pri.AngleClass().Zero())
 
-	v = ele.AngleFromSource("~τ")
+	v = pri.AngleFromSource("~τ")
 	ass.Equal(t, "~τ", v.AsSource())
-	ass.Equal(t, v, ele.AngleClass().Tau())
+	ass.Equal(t, v, pri.AngleClass().Tau())
 }
 
 func TestPositiveAngles(t *tes.T) {
-	var v = ele.Angle(mat.Pi)
+	var v = pri.Angle(mat.Pi)
 	ass.Equal(t, mat.Pi, v.AsFloat())
-	ass.Equal(t, v, ele.AngleClass().Pi())
+	ass.Equal(t, v, pri.AngleClass().Pi())
 
-	v = ele.AngleFromSource("~π")
+	v = pri.AngleFromSource("~π")
 	ass.Equal(t, "~π", v.AsSource())
-	ass.Equal(t, v, ele.AngleClass().Pi())
+	ass.Equal(t, v, pri.AngleClass().Pi())
 }
 
 func TestNegativeAngles(t *tes.T) {
-	var v = ele.Angle(-mat.Pi)
+	var v = pri.Angle(-mat.Pi)
 	ass.Equal(t, mat.Pi, v.AsFloat())
-	ass.Equal(t, v, ele.AngleClass().Pi())
+	ass.Equal(t, v, pri.AngleClass().Pi())
 
-	v = ele.Angle(-mat.Pi / 2.0)
+	v = pri.Angle(-mat.Pi / 2.0)
 	ass.Equal(t, 1.5*mat.Pi, v.AsFloat())
 }
 
 func TestAnglesLibrary(t *tes.T) {
-	var class = ele.AngleClass()
+	var class = pri.AngleClass()
 	var v0 = class.Zero()
-	var v1 = ele.Angle(mat.Pi * 0.25)
-	var v2 = ele.Angle(mat.Pi * 0.5)
-	var v3 = ele.Angle(mat.Pi * 0.75)
+	var v1 = pri.Angle(mat.Pi * 0.25)
+	var v2 = pri.Angle(mat.Pi * 0.5)
+	var v3 = pri.Angle(mat.Pi * 0.75)
 	var v4 = class.Pi()
-	var v5 = ele.Angle(mat.Pi * 1.25)
-	var v6 = ele.Angle(mat.Pi * 1.5)
-	var v7 = ele.Angle(mat.Pi * 1.75)
+	var v5 = pri.Angle(mat.Pi * 1.25)
+	var v6 = pri.Angle(mat.Pi * 1.5)
+	var v7 = pri.Angle(mat.Pi * 1.75)
 	var v8 = class.Tau()
 
 	ass.Equal(t, v4, class.Inverse(v0))
@@ -128,27 +128,27 @@ func TestAnglesLibrary(t *tes.T) {
 }
 
 func TestFalseBooleans(t *tes.T) {
-	ass.False(t, ele.BooleanClass().False().AsIntrinsic())
-	var v = ele.Boolean(false)
+	ass.False(t, pri.BooleanClass().False().AsIntrinsic())
+	var v = pri.Boolean(false)
 	ass.False(t, v.AsIntrinsic())
-	v = ele.BooleanFromSource("false")
+	v = pri.BooleanFromSource("false")
 	ass.Equal(t, "false", v.AsSource())
-	ass.Equal(t, v, ele.BooleanClass().False())
+	ass.Equal(t, v, pri.BooleanClass().False())
 }
 
 func TestTrueBooleans(t *tes.T) {
-	ass.True(t, ele.BooleanClass().True().AsIntrinsic())
-	var v = ele.Boolean(true)
+	ass.True(t, pri.BooleanClass().True().AsIntrinsic())
+	var v = pri.Boolean(true)
 	ass.True(t, v.AsIntrinsic())
-	v = ele.BooleanFromSource("true")
+	v = pri.BooleanFromSource("true")
 	ass.Equal(t, "true", v.AsSource())
-	ass.Equal(t, v, ele.BooleanClass().True())
+	ass.Equal(t, v, pri.BooleanClass().True())
 }
 
 func TestBooleansLibrary(t *tes.T) {
-	var T = ele.Boolean(true)
-	var F = ele.Boolean(false)
-	var class = ele.BooleanClass()
+	var T = pri.Boolean(true)
+	var F = pri.Boolean(false)
+	var class = pri.BooleanClass()
 
 	var andNot = class.And(class.Not(T), class.Not(T))
 	var notIor = class.Not(class.Ior(T, T))
@@ -191,13 +191,13 @@ func TestBooleansLibrary(t *tes.T) {
 	ass.Equal(t, xor, class.Xor(F, F))
 }
 
-var DurationClass = ele.DurationClass()
+var DurationClass = pri.DurationClass()
 
 var zero uint = 0
 var one uint = 1
 
 func TestZeroDurations(t *tes.T) {
-	var v = ele.Duration(0)
+	var v = pri.Duration(0)
 	ass.Equal(t, 0, v.AsInteger())
 	ass.Equal(t, zero, v.AsIntrinsic())
 	ass.Equal(t, 0.0, v.AsMilliseconds())
@@ -219,14 +219,14 @@ func TestZeroDurations(t *tes.T) {
 }
 
 func TestStringDurations(t *tes.T) {
-	var duration = ele.DurationFromSource("~P1Y2M3DT4H5M6S")
+	var duration = pri.DurationFromSource("~P1Y2M3DT4H5M6S")
 	ass.Equal(t, "~P1Y2M3DT4H5M6S", duration.AsSource())
-	duration = ele.DurationFromSource("~P0W")
+	duration = pri.DurationFromSource("~P0W")
 	ass.Equal(t, "~P0W", duration.AsSource())
 }
 
 func TestDurations(t *tes.T) {
-	var v = ele.Duration(60000)
+	var v = pri.Duration(60000)
 	ass.Equal(t, "~PT1M", v.AsSource())
 	ass.Equal(t, 60000, v.AsInteger())
 	ass.Equal(t, uint(60000), v.AsIntrinsic())
@@ -248,41 +248,41 @@ func TestDurations(t *tes.T) {
 	ass.Equal(t, zero, v.GetYears())
 }
 
-var GlyphClass = ele.GlyphClass()
+var GlyphClass = pri.GlyphClass()
 
 func TestGlyphs(t *tes.T) {
-	var v = ele.GlyphFromSource("'''")
+	var v = pri.GlyphFromSource("'''")
 	ass.Equal(t, "'''", v.AsSource())
 
-	v = ele.Glyph('a')
+	v = pri.Glyph('a')
 	ass.Equal(t, "'a'", v.AsSource())
 
-	v = ele.Glyph('"')
+	v = pri.Glyph('"')
 	ass.Equal(t, `'"'`, v.AsSource())
 
-	v = ele.Glyph('😊')
+	v = pri.Glyph('😊')
 	ass.Equal(t, "'😊'", v.AsSource())
 
-	v = ele.Glyph('界')
+	v = pri.Glyph('界')
 	ass.Equal(t, "'界'", v.AsSource())
 
-	v = ele.Glyph('\'')
+	v = pri.Glyph('\'')
 	ass.Equal(t, "'''", v.AsSource())
 
-	v = ele.Glyph('\\')
+	v = pri.Glyph('\\')
 	ass.Equal(t, "'\\'", v.AsSource())
 
-	v = ele.Glyph('\n')
+	v = pri.Glyph('\n')
 	ass.Equal(t, "'\n'", v.AsSource())
 
-	v = ele.Glyph('\t')
+	v = pri.Glyph('\t')
 	ass.Equal(t, "'\t'", v.AsSource())
 }
 
-var MomentClass = ele.MomentClass()
+var MomentClass = pri.MomentClass()
 
 func TestIntegerMoments(t *tes.T) {
-	var v = ele.Moment(1238589296789)
+	var v = pri.Moment(1238589296789)
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 1238589296789, v.AsIntrinsic())
 	ass.Equal(t, 1238589296789, v.AsInteger())
@@ -305,16 +305,16 @@ func TestIntegerMoments(t *tes.T) {
 }
 
 func TestStringMoments(t *tes.T) {
-	var v = ele.MomentFromSource("<-1-02-03T04:05:06.700>")
+	var v = pri.MomentFromSource("<-1-02-03T04:05:06.700>")
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, "<-1-02-03T04:05:06.700>", v.AsSource())
 }
 
 func TestMomentsLibrary(t *tes.T) {
-	var before = ele.MomentClass().Now()
-	var duration = ele.Duration(12345)
-	var after = ele.Moment(before.AsInteger() + duration.AsInteger())
-	var class = ele.MomentClass()
+	var before = pri.MomentClass().Now()
+	var duration = pri.Duration(12345)
+	var after = pri.Moment(before.AsInteger() + duration.AsInteger())
+	var class = pri.MomentClass()
 
 	ass.Equal(t, duration, class.Duration(before, after))
 	ass.Equal(t, duration, class.Duration(after, before))
@@ -323,7 +323,7 @@ func TestMomentsLibrary(t *tes.T) {
 }
 
 func TestZero(t *tes.T) {
-	var v = ele.Number(0 + 0i)
+	var v = pri.Number(0 + 0i)
 	ass.Equal(t, 0+0i, v.AsIntrinsic())
 	ass.True(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
@@ -333,11 +333,11 @@ func TestZero(t *tes.T) {
 	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, v, ele.NumberClass().Zero())
+	ass.Equal(t, v, pri.NumberClass().Zero())
 }
 
 func TestInfinity(t *tes.T) {
-	var v = ele.Number(cmp.Inf())
+	var v = pri.Number(cmp.Inf())
 	ass.Equal(t, cmp.Inf(), v.AsIntrinsic())
 	ass.False(t, v.IsZero())
 	ass.True(t, v.IsInfinite())
@@ -347,11 +347,11 @@ func TestInfinity(t *tes.T) {
 	ass.Equal(t, mat.Inf(1), v.AsFloat())
 	ass.Equal(t, mat.Inf(1), v.GetReal())
 	ass.Equal(t, mat.Inf(1), v.GetImaginary())
-	ass.Equal(t, v, ele.NumberClass().Infinity())
+	ass.Equal(t, v, pri.NumberClass().Infinity())
 }
 
 func TestUndefined(t *tes.T) {
-	var v = ele.Number(cmp.NaN())
+	var v = pri.Number(cmp.NaN())
 	ass.True(t, cmp.IsNaN(v.AsIntrinsic()))
 	ass.False(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
@@ -363,26 +363,26 @@ func TestUndefined(t *tes.T) {
 }
 
 func TestPositivePureReals(t *tes.T) {
-	var v = ele.Number(0.25)
+	var v = pri.Number(0.25)
 	ass.Equal(t, 0.25+0i, v.AsIntrinsic())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.25, v.AsFloat())
 	ass.Equal(t, 0.25, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 	var integer = 5
-	v = ele.NumberFromInteger(integer)
+	v = pri.NumberFromInteger(integer)
 	ass.Equal(t, 5.0, v.AsFloat())
 	var float = 5.0
-	v = ele.NumberFromFloat(float)
+	v = pri.NumberFromFloat(float)
 	ass.Equal(t, 5.0, v.AsFloat())
-	v = ele.NumberFromSource("1.23456789E+100")
+	v = pri.NumberFromSource("1.23456789E+100")
 	ass.Equal(t, "1.23456789E+100", v.AsSource())
-	v = ele.NumberFromSource("1.23456789E-10")
+	v = pri.NumberFromSource("1.23456789E-10")
 	ass.Equal(t, "1.23456789E-10", v.AsSource())
 }
 
 func TestPositivePureImaginaries(t *tes.T) {
-	var v = ele.Number(0.25i)
+	var v = pri.Number(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsIntrinsic())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsFloat())
@@ -391,7 +391,7 @@ func TestPositivePureImaginaries(t *tes.T) {
 }
 
 func TestNegativePureReals(t *tes.T) {
-	var v = ele.Number(-0.75)
+	var v = pri.Number(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsIntrinsic())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -0.75, v.AsFloat())
@@ -400,7 +400,7 @@ func TestNegativePureReals(t *tes.T) {
 }
 
 func TestNegativePureImaginaries(t *tes.T) {
-	var v = ele.Number(-0.75i)
+	var v = pri.Number(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsIntrinsic())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsFloat())
@@ -409,7 +409,7 @@ func TestNegativePureImaginaries(t *tes.T) {
 }
 
 func TestNumberFromPolar(t *tes.T) {
-	var v = ele.NumberFromPolar(1.0, mat.Pi)
+	var v = pri.NumberFromPolar(1.0, mat.Pi)
 	ass.Equal(t, -1.0+0i, v.AsIntrinsic())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -1.0, v.AsFloat())
@@ -418,14 +418,14 @@ func TestNumberFromPolar(t *tes.T) {
 	ass.Equal(t, 1.0, v.GetMagnitude())
 	ass.Equal(t, mat.Pi, v.GetAngle())
 
-	v = ele.NumberFromSource("5e^~1i")
+	v = pri.NumberFromSource("5e^~1i")
 	ass.Equal(t, 5.0, v.GetMagnitude())
 	ass.Equal(t, 1.0, v.GetAngle())
 	ass.Equal(t, "5e^~1i", v.AsPolar())
 }
 
 func TestNumberFromSource(t *tes.T) {
-	var v = ele.NumberFromSource("1e^~πi")
+	var v = pri.NumberFromSource("1e^~πi")
 	ass.Equal(t, -1.0+0i, v.AsIntrinsic())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, "-1", v.AsSource())
@@ -436,47 +436,47 @@ func TestNumberFromSource(t *tes.T) {
 	ass.Equal(t, 1.0, v.GetMagnitude())
 	ass.Equal(t, mat.Pi, v.GetAngle())
 
-	v = ele.NumberFromSource("-1.2-3.4i")
+	v = pri.NumberFromSource("-1.2-3.4i")
 	ass.Equal(t, "-1.2-3.4i", v.AsSource())
 	ass.Equal(t, -1.2, v.GetReal())
 	ass.Equal(t, -3.4, v.GetImaginary())
 
-	v = ele.NumberFromSource("-π+τi")
+	v = pri.NumberFromSource("-π+τi")
 	ass.Equal(t, "-π+τi", v.AsSource())
 	ass.Equal(t, -3.141592653589793, v.GetReal())
 	ass.Equal(t, 6.283185307179586, v.GetImaginary())
 
-	v = ele.NumberFromSource("undefined")
+	v = pri.NumberFromSource("undefined")
 	ass.Equal(t, "undefined", v.AsSource())
 	ass.False(t, v.IsDefined())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("+infinity")
+	v = pri.NumberFromSource("+infinity")
 	ass.Equal(t, "+∞", v.AsSource())
 	ass.True(t, v.IsMaximum())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("infinity")
+	v = pri.NumberFromSource("infinity")
 	ass.Equal(t, "∞", v.AsSource())
 	ass.True(t, v.IsInfinite())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("-infinity")
+	v = pri.NumberFromSource("-infinity")
 	ass.Equal(t, "-∞", v.AsSource())
 	ass.True(t, v.IsMinimum())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("∞")
+	v = pri.NumberFromSource("∞")
 	ass.Equal(t, "∞", v.AsSource())
 	ass.True(t, v.IsInfinite())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("-∞")
+	v = pri.NumberFromSource("-∞")
 	ass.Equal(t, "-∞", v.AsSource())
 	ass.True(t, v.IsMinimum())
 	ass.False(t, v.HasMagnitude())
 
-	v = ele.NumberFromSource("+1")
+	v = pri.NumberFromSource("+1")
 	ass.Equal(t, "1", v.AsSource())
 	ass.Equal(t, 1.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
@@ -485,7 +485,7 @@ func TestNumberFromSource(t *tes.T) {
 	ass.True(t, v.HasMagnitude())
 	ass.False(t, v.IsNegative())
 
-	v = ele.NumberFromSource("1")
+	v = pri.NumberFromSource("1")
 	ass.Equal(t, "1", v.AsSource())
 	ass.Equal(t, 1.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
@@ -494,14 +494,14 @@ func TestNumberFromSource(t *tes.T) {
 	ass.True(t, v.HasMagnitude())
 	ass.False(t, v.IsNegative())
 
-	v = ele.NumberFromSource("-π")
+	v = pri.NumberFromSource("-π")
 	ass.Equal(t, "-π", v.AsSource())
 	ass.Equal(t, -mat.Pi, v.GetReal())
 	ass.Equal(t, mat.Pi, v.GetAngle())
 	ass.True(t, v.HasMagnitude())
 	ass.True(t, v.IsNegative())
 
-	v = ele.NumberFromSource("+1i")
+	v = pri.NumberFromSource("+1i")
 	ass.Equal(t, "1i", v.AsSource())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 1.0, v.GetImaginary())
@@ -510,7 +510,7 @@ func TestNumberFromSource(t *tes.T) {
 	ass.True(t, v.HasMagnitude())
 	ass.False(t, v.IsNegative())
 
-	v = ele.NumberFromSource("1i")
+	v = pri.NumberFromSource("1i")
 	ass.Equal(t, "1i", v.AsSource())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 1.0, v.GetImaginary())
@@ -519,7 +519,7 @@ func TestNumberFromSource(t *tes.T) {
 	ass.True(t, v.HasMagnitude())
 	ass.False(t, v.IsNegative())
 
-	v = ele.NumberFromSource("-1i")
+	v = pri.NumberFromSource("-1i")
 	ass.Equal(t, "-1i", v.AsSource())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, -1.0, v.GetImaginary())
@@ -528,19 +528,19 @@ func TestNumberFromSource(t *tes.T) {
 	ass.True(t, v.HasMagnitude())
 	ass.False(t, v.IsNegative())
 
-	v = ele.NumberFromSource("-1.2345678E+90")
+	v = pri.NumberFromSource("-1.2345678E+90")
 	ass.Equal(t, "-1.2345678E+90", v.AsSource())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -1.2345678e+90, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 
-	v = ele.NumberFromSource("-1.2345678E+90i")
+	v = pri.NumberFromSource("-1.2345678E+90i")
 	ass.Equal(t, "-1.2345678E+90i", v.AsSource())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, -1.2345678e+90, v.GetImaginary())
 
-	v = ele.NumberFromSource("1.2345678E+90e^~1.2345678E-90i")
+	v = pri.NumberFromSource("1.2345678E+90e^~1.2345678E-90i")
 	ass.Equal(t, "1.2345678E+90e^~1.2345678E-90i", v.AsPolar())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 1.2345678e+90, v.GetMagnitude())
@@ -548,16 +548,16 @@ func TestNumberFromSource(t *tes.T) {
 }
 
 func TestNumberLibrary(t *tes.T) {
-	var class = ele.NumberClass()
+	var class = pri.NumberClass()
 	var zero = class.Zero()
 	var i = class.I()
-	var minusi = ele.Number(-1i)
-	var half = ele.Number(0.5)
-	var minushalf = ele.Number(-0.5)
+	var minusi = pri.Number(-1i)
+	var half = pri.Number(0.5)
+	var minushalf = pri.Number(-0.5)
 	var one = class.One()
-	var minusone = ele.Number(-1)
-	var two = ele.Number(2.0)
-	var minustwo = ele.Number(-2.0)
+	var minusone = pri.Number(-1)
+	var two = pri.Number(2.0)
+	var minustwo = pri.Number(-2.0)
 	var infinity = class.Infinity()
 	var undefined = class.Undefined()
 
@@ -751,83 +751,83 @@ func TestNumberLibrary(t *tes.T) {
 }
 
 func TestZeroPercentages(t *tes.T) {
-	var v = ele.Percentage(0.0)
+	var v = pri.Percentage(0.0)
 	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestPositivePercentages(t *tes.T) {
-	var v = ele.Percentage(25)
+	var v = pri.Percentage(25)
 	ass.Equal(t, 0.25, v.AsIntrinsic())
 	ass.Equal(t, 25.0, v.AsFloat())
 }
 
 func TestNegativePercentages(t *tes.T) {
-	var v = ele.Percentage(-75)
+	var v = pri.Percentage(-75)
 	ass.Equal(t, -0.75, v.AsIntrinsic())
 	ass.Equal(t, -75.0, v.AsFloat())
 }
 
 func TestStringPercentages(t *tes.T) {
-	var v = ele.PercentageFromSource("1.7%")
+	var v = pri.PercentageFromSource("1.7%")
 	//ass.Equal(t, -1.0, v.AsIntrinsic())
 	//ass.Equal(t, -100.0, v.AsFloat())
 	ass.Equal(t, "1.7%", v.AsSource())
 }
 
 func TestBooleanProbabilities(t *tes.T) {
-	var v1 = ele.ProbabilityFromBoolean(false)
+	var v1 = pri.ProbabilityFromBoolean(false)
 	ass.Equal(t, 0.0, v1.AsFloat())
 
-	var v2 = ele.ProbabilityFromBoolean(true)
+	var v2 = pri.ProbabilityFromBoolean(true)
 	ass.Equal(t, 1.0, v2.AsFloat())
 }
 
 func TestZeroProbabilities(t *tes.T) {
-	var v = ele.Probability(0.0)
+	var v = pri.Probability(0.0)
 	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestOneProbabilities(t *tes.T) {
-	var v = ele.Probability(1.0)
+	var v = pri.Probability(1.0)
 	ass.Equal(t, 1.0, v.AsFloat())
 }
 
 func TestRandomProbability(t *tes.T) {
-	ele.ProbabilityClass().Random()
+	pri.ProbabilityClass().Random()
 }
 
 func TestStringProbabilities(t *tes.T) {
-	var v = ele.ProbabilityFromSource("p0")
+	var v = pri.ProbabilityFromSource("p0")
 	ass.Equal(t, 0.0, v.AsIntrinsic())
 	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, "p0", v.AsSource())
 
-	v = ele.ProbabilityFromSource("p0.5")
+	v = pri.ProbabilityFromSource("p0.5")
 	ass.Equal(t, 0.5, v.AsIntrinsic())
 	ass.Equal(t, 0.5, v.AsFloat())
 	ass.Equal(t, "p0.5", v.AsSource())
 
-	v = ele.ProbabilityFromSource("p1")
+	v = pri.ProbabilityFromSource("p1")
 	ass.Equal(t, 1.0, v.AsIntrinsic())
 	ass.Equal(t, 1.0, v.AsFloat())
 	ass.Equal(t, "p1", v.AsSource())
 }
 
 func TestOtherProbabilities(t *tes.T) {
-	var v1 = ele.Probability(0.25)
+	var v1 = pri.Probability(0.25)
 	ass.Equal(t, 0.25, v1.AsFloat())
 
-	var v2 = ele.Probability(0.5)
+	var v2 = pri.Probability(0.5)
 	ass.Equal(t, 0.5, v2.AsFloat())
 
-	var v3 = ele.Probability(0.75)
+	var v3 = pri.Probability(0.75)
 	ass.Equal(t, 0.75, v3.AsFloat())
 }
 
 func TestProbabilitieLibrary(t *tes.T) {
-	var T = ele.Probability(0.75)
-	var F = ele.Probability(0.25)
-	var class = ele.ProbabilityClass()
+	var T = pri.Probability(0.75)
+	var F = pri.Probability(0.25)
+	var class = pri.ProbabilityClass()
 
 	var andNot = class.And(class.Not(T), class.Not(T))
 	var notIor = class.Not(class.Ior(T, T))
@@ -871,7 +871,7 @@ func TestProbabilitieLibrary(t *tes.T) {
 }
 
 func TestResource(t *tes.T) {
-	var v = ele.Resource("https://craterdog.com/About.html")
+	var v = pri.Resource("https://craterdog.com/About.html")
 	ass.Equal(t, "https://craterdog.com/About.html", v.AsIntrinsic())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -881,7 +881,7 @@ func TestResource(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPath(t *tes.T) {
-	var v = ele.ResourceFromSource("<https://craterdog.com/About.html>")
+	var v = pri.ResourceFromSource("<https://craterdog.com/About.html>")
 	ass.Equal(t, "<https://craterdog.com/About.html>", v.AsSource())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -891,7 +891,7 @@ func TestResourceWithAuthorityAndPath(t *tes.T) {
 }
 
 func TestResourceWithPath(t *tes.T) {
-	var v = ele.ResourceFromSource("<mailto:craterdog@google.com>")
+	var v = pri.ResourceFromSource("<mailto:craterdog@google.com>")
 	ass.Equal(t, "<mailto:craterdog@google.com>", v.AsSource())
 	ass.Equal(t, "mailto", v.GetScheme())
 	ass.Equal(t, "", v.GetAuthority())
@@ -901,7 +901,7 @@ func TestResourceWithPath(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndQuery(t *tes.T) {
-	var v = ele.ResourceFromSource("<https://craterdog.com/?foo=bar;bar=baz>")
+	var v = pri.ResourceFromSource("<https://craterdog.com/?foo=bar;bar=baz>")
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz>", v.AsSource())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -911,7 +911,7 @@ func TestResourceWithAuthorityAndPathAndQuery(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndFragment(t *tes.T) {
-	var v = ele.ResourceFromSource("<https://craterdog.com/#Home>")
+	var v = pri.ResourceFromSource("<https://craterdog.com/#Home>")
 	ass.Equal(t, "<https://craterdog.com/#Home>", v.AsSource())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -921,7 +921,7 @@ func TestResourceWithAuthorityAndPathAndFragment(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
-	var v = ele.ResourceFromSource("<https://craterdog.com/?foo=bar;bar=baz#Home>")
+	var v = pri.ResourceFromSource("<https://craterdog.com/?foo=bar;bar=baz#Home>")
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz#Home>", v.AsSource())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -932,13 +932,13 @@ func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
 
 func TestSymbol(t *tes.T) {
 	var foobar = "foo-bar"
-	var v = ele.Symbol(foobar)
+	var v = pri.Symbol(foobar)
 	ass.Equal(t, foobar, v.AsIntrinsic())
 }
 
 func TestSymbolFromSource(t *tes.T) {
 	var foobar = "$foo-bar"
-	var v = ele.SymbolFromSource(foobar)
+	var v = pri.SymbolFromSource(foobar)
 	ass.Equal(t, foobar, v.AsSource())
 }
 
@@ -946,7 +946,7 @@ func TestSymbolFromSource(t *tes.T) {
 
 func TestEmptyBinary(t *tes.T) {
 	var binary = `'><'`
-	var v = ele.BinaryFromSource(binary)
+	var v = pri.BinaryFromSource(binary)
 	ass.Equal(t, binary, v.AsSource())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, int(v.GetSize()))
@@ -956,11 +956,11 @@ func TestBinary(t *tes.T) {
 	var binary = `'>
     abcd1234
 <'`
-	var v = ele.BinaryFromSource(binary)
+	var v = pri.BinaryFromSource(binary)
 	ass.Equal(t, binary, v.AsSource())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, int(v.GetSize()))
-	ass.Equal(t, v.AsArray(), ele.Binary(v.AsArray()).AsArray())
+	ass.Equal(t, v.AsArray(), pri.Binary(v.AsArray()).AsArray())
 }
 
 func TestBinaryLibrary(t *tes.T) {
@@ -973,19 +973,19 @@ func TestBinaryLibrary(t *tes.T) {
 	var b3 = `'>
     abcd12345678
 <'`
-	var v1 = ele.BinaryFromSource(b1)
-	var v2 = ele.BinaryFromSource(b2)
-	var class = ele.BinaryClass()
+	var v1 = pri.BinaryFromSource(b1)
+	var v2 = pri.BinaryFromSource(b2)
+	var class = pri.BinaryClass()
 	ass.Equal(t, b3, class.Concatenate(v1, v2).AsSource())
 
-	v1 = ele.Binary([]byte{0x00, 0x01, 0x02, 0x03, 0x04})
-	v2 = ele.Binary([]byte{0x03, 0x00, 0x01, 0x02})
-	var not = ele.Binary([]byte{0xff, 0xfe, 0xfd, 0xfc, 0xfb})
-	var and = ele.Binary([]byte{0x00, 0x00, 0x00, 0x02, 0x00})
-	var sans = ele.Binary([]byte{0x00, 0x01, 0x02, 0x01, 0x04})
-	var or = ele.Binary([]byte{0x03, 0x01, 0x03, 0x03, 0x04})
-	var xor = ele.Binary([]byte{0x03, 0x01, 0x03, 0x01, 0x04})
-	var sans2 = ele.Binary([]byte{0x03, 0x00, 0x01, 0x00, 0x00})
+	v1 = pri.Binary([]byte{0x00, 0x01, 0x02, 0x03, 0x04})
+	v2 = pri.Binary([]byte{0x03, 0x00, 0x01, 0x02})
+	var not = pri.Binary([]byte{0xff, 0xfe, 0xfd, 0xfc, 0xfb})
+	var and = pri.Binary([]byte{0x00, 0x00, 0x00, 0x02, 0x00})
+	var sans = pri.Binary([]byte{0x00, 0x01, 0x02, 0x01, 0x04})
+	var or = pri.Binary([]byte{0x03, 0x01, 0x03, 0x03, 0x04})
+	var xor = pri.Binary([]byte{0x03, 0x01, 0x03, 0x01, 0x04})
+	var sans2 = pri.Binary([]byte{0x03, 0x00, 0x01, 0x00, 0x00})
 
 	ass.Equal(t, not, class.Not(v1))
 	ass.Equal(t, and, class.And(v1, v2))
@@ -999,34 +999,34 @@ func TestBytecode(t *tes.T) {
 	var bytecode = `'>
     :abcd:1234
 <'`
-	var v = ele.BytecodeFromSource(bytecode)
+	var v = pri.BytecodeFromSource(bytecode)
 	ass.Equal(t, bytecode, v.AsSource())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 2, int(v.GetSize()))
-	ass.Equal(t, v.AsArray(), ele.Bytecode(v.AsArray()).AsArray())
+	ass.Equal(t, v.AsArray(), pri.Bytecode(v.AsArray()).AsArray())
 }
 
 func TestName(t *tes.T) {
-	var v1 = ele.NameFromSource("/bali-nebula/types/abstractions/5String")
+	var v1 = pri.NameFromSource("/bali-nebula/types/abstractions/5String")
 	ass.Equal(t, "/bali-nebula/types/abstractions/5String", v1.AsSource())
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 4, int(v1.GetSize()))
-	ass.Equal(t, ele.Folder("bali-nebula"), v1.GetValue(1))
-	ass.Equal(t, ele.Folder("5String"), v1.GetValue(-1))
-	var v2 = ele.Name(v1.AsArray())
+	ass.Equal(t, pri.Folder("bali-nebula"), v1.GetValue(1))
+	ass.Equal(t, pri.Folder("5String"), v1.GetValue(-1))
+	var v2 = pri.Name(v1.AsArray())
 	ass.Equal(t, v1.AsSource(), v2.AsSource())
-	var v3 = ele.NameFromSequence(v1.GetValues(1, 2))
+	var v3 = pri.NameFromSequence(v1.GetValues(1, 2))
 	ass.Equal(t, 1, v1.GetIndex("bali-nebula"))
 	ass.Equal(t, "/bali-nebula/types", v3.AsSource())
 }
 
 func TestNamesLibrary(t *tes.T) {
-	var v1 = ele.NameFromSource("/bali-nebula/types/abstractions")
-	var v2 = ele.NameFromSource("/String")
+	var v1 = pri.NameFromSource("/bali-nebula/types/abstractions")
+	var v2 = pri.NameFromSource("/String")
 	ass.Equal(
 		t,
 		"/bali-nebula/types/abstractions/String",
-		ele.NameClass().Concatenate(v1, v2).AsSource(),
+		pri.NameClass().Concatenate(v1, v2).AsSource(),
 	)
 }
 
@@ -1052,7 +1052,7 @@ const n3 = `">
 <"`
 
 func TestEmptyNarrative(t *tes.T) {
-	var v0 = ele.NarrativeFromSource(n0)
+	var v0 = pri.NarrativeFromSource(n0)
 	ass.Equal(t, n0, v0.AsSource())
 	ass.True(t, v0.IsEmpty())
 	ass.Equal(t, 0, int(v0.GetSize()))
@@ -1060,36 +1060,36 @@ func TestEmptyNarrative(t *tes.T) {
 }
 
 func TestNarrative(t *tes.T) {
-	var v1 = ele.NarrativeFromSource(n1)
+	var v1 = pri.NarrativeFromSource(n1)
 	ass.Equal(t, n1, v1.AsSource())
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 1, int(v1.GetSize()))
 
-	var v3 = ele.NarrativeFromSource(n3)
+	var v3 = pri.NarrativeFromSource(n3)
 	ass.Equal(t, n3, v3.AsSource())
 	ass.False(t, v3.IsEmpty())
 	ass.Equal(t, 5, int(v3.GetSize()))
 
-	ass.Equal(t, n3, ele.Narrative(v3.AsArray()).AsSource())
+	ass.Equal(t, n3, pri.Narrative(v3.AsArray()).AsSource())
 	ass.Equal(t, 5, len(v3.AsArray()))
 }
 
 func TestNarrativesLibrary(t *tes.T) {
-	var v1 = ele.NarrativeFromSource(n1)
-	var v2 = ele.NarrativeFromSource(n2)
-	var v3 = ele.NarrativeClass().Concatenate(v1, v2)
+	var v1 = pri.NarrativeFromSource(n1)
+	var v2 = pri.NarrativeFromSource(n2)
+	var v3 = pri.NarrativeClass().Concatenate(v1, v2)
 	ass.Equal(t, v1.GetValue(1), v3.GetValue(1))
 	ass.Equal(t, v2.GetValue(-1), v3.GetValue(-1))
 	ass.Equal(t, n3, v3.AsSource())
 }
 
 func TestNonePattern(t *tes.T) {
-	var v = ele.PatternClass().None()
+	var v = pri.PatternClass().None()
 	ass.Equal(t, `none`, v.AsSource())
 
-	v = ele.PatternFromSource(`none`)
+	v = pri.PatternFromSource(`none`)
 	ass.Equal(t, `none`, v.AsSource())
-	ass.Equal(t, v, ele.PatternClass().None())
+	ass.Equal(t, v, pri.PatternClass().None())
 
 	var text = ""
 	ass.False(t, v.MatchesText(text))
@@ -1105,12 +1105,12 @@ func TestNonePattern(t *tes.T) {
 }
 
 func TestAnyPattern(t *tes.T) {
-	var v = ele.PatternClass().Any()
+	var v = pri.PatternClass().Any()
 	ass.Equal(t, `any`, v.AsSource())
 
-	v = ele.PatternFromSource(`any`)
+	v = pri.PatternFromSource(`any`)
 	ass.Equal(t, `any`, v.AsSource())
-	ass.Equal(t, v, ele.PatternClass().Any())
+	ass.Equal(t, v, pri.PatternClass().Any())
 
 	var text = ""
 	ass.True(t, v.MatchesText(text))
@@ -1126,7 +1126,7 @@ func TestAnyPattern(t *tes.T) {
 }
 
 func TestSomePattern(t *tes.T) {
-	var v = ele.PatternFromSource(`"c(.+t)"?`)
+	var v = pri.PatternFromSource(`"c(.+t)"?`)
 	ass.Equal(t, `"c(.+t)"?`, v.AsSource())
 
 	var text = "ct"
@@ -1147,36 +1147,36 @@ func TestSomePattern(t *tes.T) {
 }
 
 func TestEmptyQuote(t *tes.T) {
-	var v = ele.Quote([]rune{})
+	var v = pri.Quote([]rune{})
 	ass.Equal(t, []rune{}, v.AsIntrinsic())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, int(v.GetSize()))
 }
 
 func TestQuote(t *tes.T) {
-	var v = ele.QuoteFromSource(`"abcd本1234"`)
+	var v = pri.QuoteFromSource(`"abcd本1234"`)
 	ass.Equal(t, `"abcd本1234"`, v.AsSource())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 9, int(v.GetSize()))
 	ass.Equal(t, 'a', rune(v.GetValue(1)))
 	ass.Equal(t, '4', rune(v.GetValue(-1)))
-	ass.Equal(t, `"d本1"`, ele.QuoteFromSequence(v.GetValues(4, 6)).AsSource())
+	ass.Equal(t, `"d本1"`, pri.QuoteFromSequence(v.GetValues(4, 6)).AsSource())
 	ass.Equal(t, 8, v.GetIndex('3'))
 }
 
 func TestQuotesLibrary(t *tes.T) {
-	var v1 = ele.QuoteFromSource(`"abcd本"`)
-	var v2 = ele.QuoteFromSource(`"1234"`)
-	ass.Equal(t, `"abcd本1234"`, ele.QuoteClass().Concatenate(v1, v2).AsSource())
+	var v1 = pri.QuoteFromSource(`"abcd本"`)
+	var v2 = pri.QuoteFromSource(`"1234"`)
+	ass.Equal(t, `"abcd本1234"`, pri.QuoteClass().Concatenate(v1, v2).AsSource())
 }
 
 func TestStringTags(t *tes.T) {
 	var size uint
 	for size = 8; size < 33; size++ {
-		var t1 = ele.TagWithSize(size)
+		var t1 = pri.TagWithSize(size)
 		ass.Equal(t, len(t1.AsSource()), 1+int(mat.Ceil(float64(size)*8.0/5.0)))
 		var s1 = t1.AsSource()
-		var t2 = ele.TagFromSource(s1)
+		var t2 = pri.TagFromSource(s1)
 		ass.Equal(t, t1, t2)
 		var s2 = t2.AsSource()
 		ass.Equal(t, s1, s2)
@@ -1185,21 +1185,21 @@ func TestStringTags(t *tes.T) {
 }
 
 func TestVersion(t *tes.T) {
-	var v1 = ele.VersionFromSource("v1.2.3")
+	var v1 = pri.VersionFromSource("v1.2.3")
 	ass.Equal(t, "v1.2.3", v1.AsSource())
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 3, int(v1.GetSize()))
 	ass.Equal(t, uint(1), v1.GetValue(1))
 	ass.Equal(t, uint(3), v1.GetValue(-1))
-	var v3 = ele.VersionFromSequence(v1.GetValues(1, 2))
+	var v3 = pri.VersionFromSequence(v1.GetValues(1, 2))
 	ass.Equal(t, 2, v1.GetIndex(2))
 	ass.Equal(t, "v1.2", v3.AsSource())
 }
 
 func TestVersionsLibrary(t *tes.T) {
-	var v1 = ele.Version([]uint{1})
-	var v2 = ele.Version([]uint{2, 3})
-	var class = ele.VersionClass()
+	var v1 = pri.Version([]uint{1})
+	var v2 = pri.Version([]uint{2, 3})
+	var class = pri.VersionClass()
 
 	var v3 = class.Concatenate(v1, v2)
 	ass.Equal(t, []uint{1, 2, 3}, v3.AsIntrinsic())
