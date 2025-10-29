@@ -32,7 +32,7 @@ package module
 
 import (
 	ele "github.com/craterdog/go-essential-primitives/v8/elements"
-	str "github.com/craterdog/go-essential-primitives/v8/strings"
+	seq "github.com/craterdog/go-essential-primitives/v8/sequences"
 	uri "net/url"
 )
 
@@ -84,39 +84,39 @@ type (
 	Temporal   = ele.Temporal
 )
 
-// Strings
+// Sequences
 
 type (
-	Folder = str.Folder
+	Folder = seq.Folder
 )
 
 type (
-	BinaryClassLike    = str.BinaryClassLike
-	BytecodeClassLike  = str.BytecodeClassLike
-	NameClassLike      = str.NameClassLike
-	NarrativeClassLike = str.NarrativeClassLike
-	PatternClassLike   = str.PatternClassLike
-	QuoteClassLike     = str.QuoteClassLike
-	TagClassLike       = str.TagClassLike
-	VersionClassLike   = str.VersionClassLike
+	BinaryClassLike    = seq.BinaryClassLike
+	BytecodeClassLike  = seq.BytecodeClassLike
+	NameClassLike      = seq.NameClassLike
+	NarrativeClassLike = seq.NarrativeClassLike
+	PatternClassLike   = seq.PatternClassLike
+	QuoteClassLike     = seq.QuoteClassLike
+	TagClassLike       = seq.TagClassLike
+	VersionClassLike   = seq.VersionClassLike
 )
 
 type (
-	BinaryLike    = str.BinaryLike
-	BytecodeLike  = str.BytecodeLike
-	NameLike      = str.NameLike
-	NarrativeLike = str.NarrativeLike
-	PatternLike   = str.PatternLike
-	QuoteLike     = str.QuoteLike
-	TagLike       = str.TagLike
-	VersionLike   = str.VersionLike
+	BinaryLike    = seq.BinaryLike
+	BytecodeLike  = seq.BytecodeLike
+	NameLike      = seq.NameLike
+	NarrativeLike = seq.NarrativeLike
+	PatternLike   = seq.PatternLike
+	QuoteLike     = seq.QuoteLike
+	TagLike       = seq.TagLike
+	VersionLike   = seq.VersionLike
 )
 
 type (
-	Accessible[V any] = str.Accessible[V]
-	Searchable[V any] = str.Searchable[V]
-	Sequential[V any] = str.Sequential[V]
-	Ordered[V any]    = str.Ordered[V]
+	Accessible[V any] = seq.Accessible[V]
+	Searchable[V any] = seq.Searchable[V]
+	Sequential[V any] = seq.Sequential[V]
+	Ordered[V any]    = seq.Ordered[V]
 )
 
 // CLASS ACCESSORS
@@ -391,10 +391,10 @@ func SymbolFromSource(
 	)
 }
 
-// Strings
+// Sequences
 
 func BinaryClass() BinaryClassLike {
-	return str.BinaryClass()
+	return seq.BinaryClass()
 }
 
 func Binary(
@@ -406,7 +406,7 @@ func Binary(
 }
 
 func BinaryFromSequence(
-	sequence str.Sequential[byte],
+	sequence seq.Sequential[byte],
 ) BinaryLike {
 	return BinaryClass().BinaryFromSequence(
 		sequence,
@@ -422,7 +422,7 @@ func BinaryFromSource(
 }
 
 func BytecodeClass() BytecodeClassLike {
-	return str.BytecodeClass()
+	return seq.BytecodeClass()
 }
 
 func Bytecode(
@@ -434,7 +434,7 @@ func Bytecode(
 }
 
 func BytecodeFromSequence(
-	sequence str.Sequential[uint16],
+	sequence seq.Sequential[uint16],
 ) BytecodeLike {
 	return BytecodeClass().BytecodeFromSequence(
 		sequence,
@@ -450,11 +450,11 @@ func BytecodeFromSource(
 }
 
 func NameClass() NameClassLike {
-	return str.NameClass()
+	return seq.NameClass()
 }
 
 func Name(
-	folders []str.Folder,
+	folders []seq.Folder,
 ) NameLike {
 	return NameClass().Name(
 		folders,
@@ -462,7 +462,7 @@ func Name(
 }
 
 func NameFromSequence(
-	sequence str.Sequential[str.Folder],
+	sequence seq.Sequential[seq.Folder],
 ) NameLike {
 	return NameClass().NameFromSequence(
 		sequence,
@@ -478,7 +478,7 @@ func NameFromSource(
 }
 
 func NarrativeClass() NarrativeClassLike {
-	return str.NarrativeClass()
+	return seq.NarrativeClass()
 }
 
 func Narrative(
@@ -490,7 +490,7 @@ func Narrative(
 }
 
 func NarrativeFromSequence(
-	sequence str.Sequential[string],
+	sequence seq.Sequential[string],
 ) NarrativeLike {
 	return NarrativeClass().NarrativeFromSequence(
 		sequence,
@@ -506,7 +506,7 @@ func NarrativeFromSource(
 }
 
 func PatternClass() PatternClassLike {
-	return str.PatternClass()
+	return seq.PatternClass()
 }
 
 func Pattern(
@@ -518,7 +518,7 @@ func Pattern(
 }
 
 func PatternFromSequence(
-	sequence str.Sequential[rune],
+	sequence seq.Sequential[rune],
 ) PatternLike {
 	return PatternClass().PatternFromSequence(
 		sequence,
@@ -534,7 +534,7 @@ func PatternFromSource(
 }
 
 func QuoteClass() QuoteClassLike {
-	return str.QuoteClass()
+	return seq.QuoteClass()
 }
 
 func Quote(
@@ -546,7 +546,7 @@ func Quote(
 }
 
 func QuoteFromSequence(
-	sequence str.Sequential[rune],
+	sequence seq.Sequential[rune],
 ) QuoteLike {
 	return QuoteClass().QuoteFromSequence(
 		sequence,
@@ -562,7 +562,7 @@ func QuoteFromSource(
 }
 
 func TagClass() TagClassLike {
-	return str.TagClass()
+	return seq.TagClass()
 }
 
 func Tag(
@@ -582,7 +582,7 @@ func TagWithSize(
 }
 
 func TagFromSequence(
-	sequence str.Sequential[byte],
+	sequence seq.Sequential[byte],
 ) TagLike {
 	return TagClass().TagFromSequence(
 		sequence,
@@ -598,7 +598,7 @@ func TagFromSource(
 }
 
 func VersionClass() VersionClassLike {
-	return str.VersionClass()
+	return seq.VersionClass()
 }
 
 func Version(
@@ -610,7 +610,7 @@ func Version(
 }
 
 func VersionFromSequence(
-	sequence str.Sequential[uint],
+	sequence seq.Sequential[uint],
 ) VersionLike {
 	return VersionClass().VersionFromSequence(
 		sequence,

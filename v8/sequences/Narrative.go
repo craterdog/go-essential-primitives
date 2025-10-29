@@ -10,117 +10,119 @@
 ................................................................................
 */
 
-package strings
+package sequences
 
 import (
-	bin "encoding/binary"
 	fmt "fmt"
 	uti "github.com/craterdog/go-essential-utilities/v8"
 	reg "regexp"
 	sli "slices"
+	sts "strings"
 )
 
 // CLASS INTERFACE
 
 // Access Function
 
-func TagClass() TagClassLike {
-	return tagClass()
+func NarrativeClass() NarrativeClassLike {
+	return narrativeClass()
 }
 
 // Constructor Methods
 
-func (c *tagClass_) Tag(
-	bytes []byte,
-) TagLike {
-	c.validateSize(uti.ArraySize(bytes))
-	var encoded = uti.Base32Encode(bytes)
-	return tag_("#" + encoded)
+func (c *narrativeClass_) Narrative(
+	lines []string,
+) NarrativeLike {
+	var source = "\">"
+	if len(lines) > 0 {
+		for _, line := range lines {
+			var encoded = sts.ReplaceAll(string(line), `">`, `\">`)
+			encoded = sts.ReplaceAll(encoded, `<"`, `<\"`)
+			source += "\n" + encoded
+		}
+		source += "\n"
+	}
+	source += "<\""
+	return narrative_(source)
 }
 
-func (c *tagClass_) TagWithSize(
-	size uint,
-) TagLike {
-	c.validateSize(size)
-	var bytes = uti.RandomBytes(size)
-	return c.Tag(bytes)
+func (c *narrativeClass_) NarrativeFromSequence(
+	sequence Sequential[string],
+) NarrativeLike {
+	return c.Narrative(sequence.AsArray())
 }
 
-func (c *tagClass_) TagFromSequence(
-	sequence Sequential[byte],
-) TagLike {
-	var bytes = sequence.AsArray()
-	c.validateSize(uti.ArraySize(bytes))
-	return c.Tag(bytes)
-}
-
-func (c *tagClass_) TagFromSource(
+func (c *narrativeClass_) NarrativeFromSource(
 	source string,
-) TagLike {
+) NarrativeLike {
 	var matches = c.matcher_.FindStringSubmatch(source)
 	if uti.IsUndefined(matches) {
 		var message = fmt.Sprintf(
-			"An illegal string was passed to the tag constructor method: %s",
+			"An illegal string was passed to the narrative constructor method: %s",
 			source,
 		)
 		panic(message)
 	}
-	return tag_(source)
+	return narrative_(source)
 }
 
 // Constant Methods
 
 // Function Methods
 
-func (c *tagClass_) Concatenate(
-	first TagLike,
-	second TagLike,
-) TagLike {
-	var firstBytes = first.AsArray()
-	var secondBytes = second.AsArray()
-	var allBytes = make(
-		[]byte,
-		len(firstBytes)+len(secondBytes),
+func (c *narrativeClass_) Concatenate(
+	first NarrativeLike,
+	second NarrativeLike,
+) NarrativeLike {
+	var firstLines = first.AsArray()
+	var secondLines = second.AsArray()
+	var allLines = make(
+		[]string,
+		len(firstLines)+len(secondLines),
 	)
-	copy(allBytes, firstBytes)
-	copy(allBytes[len(firstBytes):], secondBytes)
-	return c.Tag(allBytes)
+	copy(allLines, firstLines)
+	copy(allLines[len(firstLines):], secondLines)
+	return c.Narrative(allLines)
 }
 
 // INSTANCE INTERFACE
 
 // Principal Methods
 
-func (v tag_) GetClass() TagClassLike {
-	return tagClass()
+func (v narrative_) GetClass() NarrativeClassLike {
+	return narrativeClass()
 }
 
-func (v tag_) AsIntrinsic() []byte {
-	var base32 = string(v[1:]) // Strip off the leading "#".
-	var bytes = uti.Base32Decode(base32)
-	return bytes
+func (v narrative_) AsIntrinsic() []string {
+	var narrative = string(v)
+	var decoded = sts.ReplaceAll(narrative[2:len(v)-2], `\">`, `">`)
+	decoded = sts.ReplaceAll(decoded, `<\"`, `<"`)
+	var lines = sts.Split(decoded, "\n")
+	lines = lines[1:] // Ignore the first empty line.
+	var size = len(lines)
+	if size > 0 {
+		size--
+		lines = lines[:size] // Ignore the last empty line.
+	}
+	return lines
 }
 
-func (v tag_) AsSource() string {
+func (v narrative_) AsSource() string {
 	return string(v)
-}
-
-func (v tag_) GetHash() uint64 {
-	return bin.BigEndian.Uint64(v.AsIntrinsic())
 }
 
 // Attribute Methods
 
-// Searchable[byte] Methods
+// Searchable[string] Methods
 
-func (v tag_) ContainsValue(
-	value byte,
+func (v narrative_) ContainsValue(
+	value string,
 ) bool {
 	return sli.Index(v.AsIntrinsic(), value) > -1
 }
 
-func (v tag_) ContainsAny(
-	values Sequential[byte],
+func (v narrative_) ContainsAny(
+	values Sequential[string],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -134,8 +136,8 @@ func (v tag_) ContainsAny(
 	return false
 }
 
-func (v tag_) ContainsAll(
-	values Sequential[byte],
+func (v narrative_) ContainsAll(
+	values Sequential[string],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -149,48 +151,48 @@ func (v tag_) ContainsAll(
 	return true
 }
 
-// Sequential[byte] Methods
+// Sequential[string] Methods
 
-func (v tag_) IsEmpty() bool {
+func (v narrative_) IsEmpty() bool {
 	return len(v.AsIntrinsic()) == 0
 }
 
-func (v tag_) GetSize() uint {
+func (v narrative_) GetSize() uint {
 	return uti.ArraySize(v.AsIntrinsic())
 }
 
-func (v tag_) AsArray() []byte {
+func (v narrative_) AsArray() []string {
 	return v.AsIntrinsic()
 }
 
-func (v tag_) GetIterator() uti.Ratcheted[byte] {
+func (v narrative_) GetIterator() uti.Ratcheted[string] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
-// Accessible[byte] Methods
+// Accessible[string] Methods
 
-func (v tag_) GetValue(
+func (v narrative_) GetValue(
 	index int,
-) byte {
-	var bytes = v.AsIntrinsic()
-	var size = uti.ArraySize(bytes)
+) string {
+	var lines = v.AsIntrinsic()
+	var size = uti.ArraySize(lines)
 	var goIndex = uti.RelativeToCardinal(index, size)
-	return bytes[goIndex]
+	return lines[goIndex]
 }
 
-func (v tag_) GetValues(
+func (v narrative_) GetValues(
 	first int,
 	last int,
-) Sequential[byte] {
-	var bytes = v.AsIntrinsic()
-	var size = uti.ArraySize(bytes)
+) Sequential[string] {
+	var lines = v.AsIntrinsic()
+	var size = uti.ArraySize(lines)
 	var goFirst = uti.RelativeToCardinal(first, size)
 	var goLast = uti.RelativeToCardinal(last, size)
-	return tagClass().Tag(bytes[goFirst : goLast+1])
+	return narrativeClass().Narrative(lines[goFirst : goLast+1])
 }
 
-func (v tag_) GetIndex(
-	value byte,
+func (v narrative_) GetIndex(
+	value string,
 ) int {
 	var index int
 	var iterator = v.GetIterator()
@@ -208,53 +210,44 @@ func (v tag_) GetIndex(
 
 // PROTECTED INTERFACE
 
-func (v tag_) String() string {
+func (v narrative_) String() string {
 	return v.AsSource()
 }
 
 // Private Methods
-
-func (c *tagClass_) validateSize(
-	size uint,
-) {
-	if size < 8 {
-		var message = fmt.Sprintf(
-			"A tag must be at least eight bytes long: %v",
-			size,
-		)
-		panic(message)
-	}
-}
 
 // NOTE:
 // These private constants are used to define the private regular expression
 // matcher that is used to match legal string patterns for this intrinsic type.
 // Unfortunately there is no way to make them private to this class since they
 // must be TRUE Go constants to be used in this way.  We append an underscore to
-// each name to lessen the chance of a name collision with other private Go
+// each narrative to lessen the chance of a narrative collision with other private Go
 // class constants in this package.
 const (
-	base32_ = base10_ + "|[A-DF-HJ-NP-TV-Z]"
+	any_ = "." // This does NOT include newline characters.
+	eol_ = "\\r?\\n"
 )
 
 // Instance Structure
 
-type tag_ string // This type must support the "comparable" type contraint.
+type narrative_ string // This type must support the "comparable" type contraint.
 
 // Class Structure
 
-type tagClass_ struct {
+type narrativeClass_ struct {
 	// Declare the class constants.
 	matcher_ *reg.Regexp
 }
 
 // Class Reference
 
-func tagClass() *tagClass_ {
-	return tagClassReference_
+func narrativeClass() *narrativeClass_ {
+	return narrativeClassReference_
 }
 
-var tagClassReference_ = &tagClass_{
+var narrativeClassReference_ = &narrativeClass_{
 	// Initialize the class constants.
-	matcher_: reg.MustCompile("^#((?:" + base32_ + ")+)"),
+	matcher_: reg.MustCompile(
+		"^\">((?:" + any_ + "|" + eol_ + ")*?)<\"",
+	),
 }

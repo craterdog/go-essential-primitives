@@ -10,117 +10,117 @@
 ................................................................................
 */
 
-package strings
+package sequences
 
 import (
+	bin "encoding/binary"
 	fmt "fmt"
 	uti "github.com/craterdog/go-essential-utilities/v8"
 	reg "regexp"
 	sli "slices"
-	sts "strings"
 )
 
 // CLASS INTERFACE
 
 // Access Function
 
-func NameClass() NameClassLike {
-	return nameClass()
+func TagClass() TagClassLike {
+	return tagClass()
 }
 
 // Constructor Methods
 
-func (c *nameClass_) Name(
-	folders []Folder,
-) NameLike {
-	var source string
-	for _, folder := range folders {
-		source += "/" + string(folder)
-	}
-	return name_(source)
+func (c *tagClass_) Tag(
+	bytes []byte,
+) TagLike {
+	c.validateSize(uti.ArraySize(bytes))
+	var encoded = uti.Base32Encode(bytes)
+	return tag_("#" + encoded)
 }
 
-func (c *nameClass_) NameFromSequence(
-	sequence Sequential[Folder],
-) NameLike {
-	return c.Name(sequence.AsArray())
+func (c *tagClass_) TagWithSize(
+	size uint,
+) TagLike {
+	c.validateSize(size)
+	var bytes = uti.RandomBytes(size)
+	return c.Tag(bytes)
 }
 
-func (c *nameClass_) NameFromSource(
+func (c *tagClass_) TagFromSequence(
+	sequence Sequential[byte],
+) TagLike {
+	var bytes = sequence.AsArray()
+	c.validateSize(uti.ArraySize(bytes))
+	return c.Tag(bytes)
+}
+
+func (c *tagClass_) TagFromSource(
 	source string,
-) NameLike {
+) TagLike {
 	var matches = c.matcher_.FindStringSubmatch(source)
 	if uti.IsUndefined(matches) {
 		var message = fmt.Sprintf(
-			"An illegal string was passed to the name constructor method: %s",
+			"An illegal string was passed to the tag constructor method: %s",
 			source,
 		)
 		panic(message)
 	}
-	return name_(source)
+	return tag_(source)
 }
 
 // Constant Methods
 
 // Function Methods
 
-func (c *nameClass_) Concatenate(
-	first NameLike,
-	second NameLike,
-) NameLike {
-	var firstFolders = first.AsIntrinsic()
-	var secondFolders = second.AsIntrinsic()
-	var allFolders = make(
-		[]Folder,
-		len(firstFolders)+len(secondFolders),
+func (c *tagClass_) Concatenate(
+	first TagLike,
+	second TagLike,
+) TagLike {
+	var firstBytes = first.AsArray()
+	var secondBytes = second.AsArray()
+	var allBytes = make(
+		[]byte,
+		len(firstBytes)+len(secondBytes),
 	)
-	copy(allFolders, firstFolders)
-	copy(allFolders[len(firstFolders):], secondFolders)
-	return c.Name(allFolders)
+	copy(allBytes, firstBytes)
+	copy(allBytes[len(firstBytes):], secondBytes)
+	return c.Tag(allBytes)
 }
 
 // INSTANCE INTERFACE
 
 // Principal Methods
 
-func (v name_) GetClass() NameClassLike {
-	return nameClass()
+func (v tag_) GetClass() TagClassLike {
+	return tagClass()
 }
 
-func (v name_) AsIntrinsic() []Folder {
-	var name = string(v)
-	var strings = sts.Split(name, "/")[1:] // Extract the folders.
-	var folders = make([]Folder, len(strings))
-	for index, folder := range strings {
-		folders[index] = Folder(folder)
-	}
-	return folders
+func (v tag_) AsIntrinsic() []byte {
+	var base32 = string(v[1:]) // Strip off the leading "#".
+	var bytes = uti.Base32Decode(base32)
+	return bytes
 }
 
-func (v name_) AsSource() string {
+func (v tag_) AsSource() string {
 	return string(v)
+}
+
+func (v tag_) GetHash() uint64 {
+	return bin.BigEndian.Uint64(v.AsIntrinsic())
 }
 
 // Attribute Methods
 
-// Spectral Methods
+// Searchable[byte] Methods
 
-func (v name_) IsBefore(
-	value NameLike,
-) bool {
-	return sli.Compare(v.AsIntrinsic(), value.AsIntrinsic()) < 0
-}
-
-// Searchable[Folder] Methods
-
-func (v name_) ContainsValue(
-	value Folder,
+func (v tag_) ContainsValue(
+	value byte,
 ) bool {
 	return sli.Index(v.AsIntrinsic(), value) > -1
 }
 
-func (v name_) ContainsAny(
-	values Sequential[Folder],
+func (v tag_) ContainsAny(
+	values Sequential[byte],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -134,8 +134,8 @@ func (v name_) ContainsAny(
 	return false
 }
 
-func (v name_) ContainsAll(
-	values Sequential[Folder],
+func (v tag_) ContainsAll(
+	values Sequential[byte],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -149,48 +149,48 @@ func (v name_) ContainsAll(
 	return true
 }
 
-// Sequential[Folder] Methods
+// Sequential[byte] Methods
 
-func (v name_) IsEmpty() bool {
+func (v tag_) IsEmpty() bool {
 	return len(v.AsIntrinsic()) == 0
 }
 
-func (v name_) GetSize() uint {
+func (v tag_) GetSize() uint {
 	return uti.ArraySize(v.AsIntrinsic())
 }
 
-func (v name_) AsArray() []Folder {
+func (v tag_) AsArray() []byte {
 	return v.AsIntrinsic()
 }
 
-func (v name_) GetIterator() uti.Ratcheted[Folder] {
+func (v tag_) GetIterator() uti.Ratcheted[byte] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
-// Accessible[Folder] Methods
+// Accessible[byte] Methods
 
-func (v name_) GetValue(
+func (v tag_) GetValue(
 	index int,
-) Folder {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
+) byte {
+	var bytes = v.AsIntrinsic()
+	var size = uti.ArraySize(bytes)
 	var goIndex = uti.RelativeToCardinal(index, size)
-	return folders[goIndex]
+	return bytes[goIndex]
 }
 
-func (v name_) GetValues(
+func (v tag_) GetValues(
 	first int,
 	last int,
-) Sequential[Folder] {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
+) Sequential[byte] {
+	var bytes = v.AsIntrinsic()
+	var size = uti.ArraySize(bytes)
 	var goFirst = uti.RelativeToCardinal(first, size)
 	var goLast = uti.RelativeToCardinal(last, size)
-	return nameClass().Name(folders[goFirst : goLast+1])
+	return tagClass().Tag(bytes[goFirst : goLast+1])
 }
 
-func (v name_) GetIndex(
-	value Folder,
+func (v tag_) GetIndex(
+	value byte,
 ) int {
 	var index int
 	var iterator = v.GetIterator()
@@ -208,11 +208,23 @@ func (v name_) GetIndex(
 
 // PROTECTED INTERFACE
 
-func (v name_) String() string {
+func (v tag_) String() string {
 	return v.AsSource()
 }
 
 // Private Methods
+
+func (c *tagClass_) validateSize(
+	size uint,
+) {
+	if size < 8 {
+		var message = fmt.Sprintf(
+			"A tag must be at least eight bytes long: %v",
+			size,
+		)
+		panic(message)
+	}
+}
 
 // NOTE:
 // These private constants are used to define the private regular expression
@@ -222,32 +234,27 @@ func (v name_) String() string {
 // each name to lessen the chance of a name collision with other private Go
 // class constants in this package.
 const (
-	digit_  = "\\p{Nd}"
-	letter_ = lower_ + "|" + upper_
-	lower_  = "\\p{Ll}"
-	upper_  = "\\p{Lu}"
+	base32_ = base10_ + "|[A-DF-HJ-NP-TV-Z]"
 )
 
 // Instance Structure
 
-type name_ string // This type must support the "comparable" type contraint.
+type tag_ string // This type must support the "comparable" type contraint.
 
 // Class Structure
 
-type nameClass_ struct {
+type tagClass_ struct {
 	// Declare the class constants.
 	matcher_ *reg.Regexp
 }
 
 // Class Reference
 
-func nameClass() *nameClass_ {
-	return nameClassReference_
+func tagClass() *tagClass_ {
+	return tagClassReference_
 }
 
-var nameClassReference_ = &nameClass_{
+var tagClassReference_ = &tagClass_{
 	// Initialize the class constants.
-	matcher_: reg.MustCompile(
-		"^(?:/(?:" + letter_ + "|" + digit_ + "|-)+" + ")+",
-	),
+	matcher_: reg.MustCompile("^#((?:" + base32_ + ")+)"),
 }

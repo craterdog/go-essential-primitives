@@ -11,7 +11,7 @@
 */
 
 /*
-Package "strings" provides a framework of aspects and class definitions for a
+Package "sequences" provides a framework of aspects and class definitions for a
 rich set of primitive data types that can be iterated over.  All primitive types
 are immutable and—for better performance—are implemented as extensions to
 existing Go primitive types.
@@ -28,7 +28,7 @@ be developed and used seamlessly since the interface declarations only depend on
 other interfaces and intrinsic types—and the class implementations only depend
 on interfaces, not on each other.
 */
-package strings
+package sequences
 
 import (
 	uti "github.com/craterdog/go-essential-utilities/v8"

@@ -10,7 +10,7 @@
 ................................................................................
 */
 
-package strings
+package sequences
 
 import (
 	fmt "fmt"
@@ -24,105 +24,103 @@ import (
 
 // Access Function
 
-func NarrativeClass() NarrativeClassLike {
-	return narrativeClass()
+func NameClass() NameClassLike {
+	return nameClass()
 }
 
 // Constructor Methods
 
-func (c *narrativeClass_) Narrative(
-	lines []string,
-) NarrativeLike {
-	var source = "\">"
-	if len(lines) > 0 {
-		for _, line := range lines {
-			var encoded = sts.ReplaceAll(string(line), `">`, `\">`)
-			encoded = sts.ReplaceAll(encoded, `<"`, `<\"`)
-			source += "\n" + encoded
-		}
-		source += "\n"
+func (c *nameClass_) Name(
+	folders []Folder,
+) NameLike {
+	var source string
+	for _, folder := range folders {
+		source += "/" + string(folder)
 	}
-	source += "<\""
-	return narrative_(source)
+	return name_(source)
 }
 
-func (c *narrativeClass_) NarrativeFromSequence(
-	sequence Sequential[string],
-) NarrativeLike {
-	return c.Narrative(sequence.AsArray())
+func (c *nameClass_) NameFromSequence(
+	sequence Sequential[Folder],
+) NameLike {
+	return c.Name(sequence.AsArray())
 }
 
-func (c *narrativeClass_) NarrativeFromSource(
+func (c *nameClass_) NameFromSource(
 	source string,
-) NarrativeLike {
+) NameLike {
 	var matches = c.matcher_.FindStringSubmatch(source)
 	if uti.IsUndefined(matches) {
 		var message = fmt.Sprintf(
-			"An illegal string was passed to the narrative constructor method: %s",
+			"An illegal string was passed to the name constructor method: %s",
 			source,
 		)
 		panic(message)
 	}
-	return narrative_(source)
+	return name_(source)
 }
 
 // Constant Methods
 
 // Function Methods
 
-func (c *narrativeClass_) Concatenate(
-	first NarrativeLike,
-	second NarrativeLike,
-) NarrativeLike {
-	var firstLines = first.AsArray()
-	var secondLines = second.AsArray()
-	var allLines = make(
-		[]string,
-		len(firstLines)+len(secondLines),
+func (c *nameClass_) Concatenate(
+	first NameLike,
+	second NameLike,
+) NameLike {
+	var firstFolders = first.AsIntrinsic()
+	var secondFolders = second.AsIntrinsic()
+	var allFolders = make(
+		[]Folder,
+		len(firstFolders)+len(secondFolders),
 	)
-	copy(allLines, firstLines)
-	copy(allLines[len(firstLines):], secondLines)
-	return c.Narrative(allLines)
+	copy(allFolders, firstFolders)
+	copy(allFolders[len(firstFolders):], secondFolders)
+	return c.Name(allFolders)
 }
 
 // INSTANCE INTERFACE
 
 // Principal Methods
 
-func (v narrative_) GetClass() NarrativeClassLike {
-	return narrativeClass()
+func (v name_) GetClass() NameClassLike {
+	return nameClass()
 }
 
-func (v narrative_) AsIntrinsic() []string {
-	var narrative = string(v)
-	var decoded = sts.ReplaceAll(narrative[2:len(v)-2], `\">`, `">`)
-	decoded = sts.ReplaceAll(decoded, `<\"`, `<"`)
-	var lines = sts.Split(decoded, "\n")
-	lines = lines[1:] // Ignore the first empty line.
-	var size = len(lines)
-	if size > 0 {
-		size--
-		lines = lines[:size] // Ignore the last empty line.
+func (v name_) AsIntrinsic() []Folder {
+	var name = string(v)
+	var strings = sts.Split(name, "/")[1:] // Extract the folders.
+	var folders = make([]Folder, len(strings))
+	for index, folder := range strings {
+		folders[index] = Folder(folder)
 	}
-	return lines
+	return folders
 }
 
-func (v narrative_) AsSource() string {
+func (v name_) AsSource() string {
 	return string(v)
 }
 
 // Attribute Methods
 
-// Searchable[string] Methods
+// Spectral Methods
 
-func (v narrative_) ContainsValue(
-	value string,
+func (v name_) IsBefore(
+	value NameLike,
+) bool {
+	return sli.Compare(v.AsIntrinsic(), value.AsIntrinsic()) < 0
+}
+
+// Searchable[Folder] Methods
+
+func (v name_) ContainsValue(
+	value Folder,
 ) bool {
 	return sli.Index(v.AsIntrinsic(), value) > -1
 }
 
-func (v narrative_) ContainsAny(
-	values Sequential[string],
+func (v name_) ContainsAny(
+	values Sequential[Folder],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -136,8 +134,8 @@ func (v narrative_) ContainsAny(
 	return false
 }
 
-func (v narrative_) ContainsAll(
-	values Sequential[string],
+func (v name_) ContainsAll(
+	values Sequential[Folder],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -151,48 +149,48 @@ func (v narrative_) ContainsAll(
 	return true
 }
 
-// Sequential[string] Methods
+// Sequential[Folder] Methods
 
-func (v narrative_) IsEmpty() bool {
+func (v name_) IsEmpty() bool {
 	return len(v.AsIntrinsic()) == 0
 }
 
-func (v narrative_) GetSize() uint {
+func (v name_) GetSize() uint {
 	return uti.ArraySize(v.AsIntrinsic())
 }
 
-func (v narrative_) AsArray() []string {
+func (v name_) AsArray() []Folder {
 	return v.AsIntrinsic()
 }
 
-func (v narrative_) GetIterator() uti.Ratcheted[string] {
+func (v name_) GetIterator() uti.Ratcheted[Folder] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
-// Accessible[string] Methods
+// Accessible[Folder] Methods
 
-func (v narrative_) GetValue(
+func (v name_) GetValue(
 	index int,
-) string {
-	var lines = v.AsIntrinsic()
-	var size = uti.ArraySize(lines)
+) Folder {
+	var folders = v.AsIntrinsic()
+	var size = uti.ArraySize(folders)
 	var goIndex = uti.RelativeToCardinal(index, size)
-	return lines[goIndex]
+	return folders[goIndex]
 }
 
-func (v narrative_) GetValues(
+func (v name_) GetValues(
 	first int,
 	last int,
-) Sequential[string] {
-	var lines = v.AsIntrinsic()
-	var size = uti.ArraySize(lines)
+) Sequential[Folder] {
+	var folders = v.AsIntrinsic()
+	var size = uti.ArraySize(folders)
 	var goFirst = uti.RelativeToCardinal(first, size)
 	var goLast = uti.RelativeToCardinal(last, size)
-	return narrativeClass().Narrative(lines[goFirst : goLast+1])
+	return nameClass().Name(folders[goFirst : goLast+1])
 }
 
-func (v narrative_) GetIndex(
-	value string,
+func (v name_) GetIndex(
+	value Folder,
 ) int {
 	var index int
 	var iterator = v.GetIterator()
@@ -210,7 +208,7 @@ func (v narrative_) GetIndex(
 
 // PROTECTED INTERFACE
 
-func (v narrative_) String() string {
+func (v name_) String() string {
 	return v.AsSource()
 }
 
@@ -221,33 +219,35 @@ func (v narrative_) String() string {
 // matcher that is used to match legal string patterns for this intrinsic type.
 // Unfortunately there is no way to make them private to this class since they
 // must be TRUE Go constants to be used in this way.  We append an underscore to
-// each narrative to lessen the chance of a narrative collision with other private Go
+// each name to lessen the chance of a name collision with other private Go
 // class constants in this package.
 const (
-	any_ = "." // This does NOT include newline characters.
-	eol_ = "\\r?\\n"
+	digit_  = "\\p{Nd}"
+	letter_ = lower_ + "|" + upper_
+	lower_  = "\\p{Ll}"
+	upper_  = "\\p{Lu}"
 )
 
 // Instance Structure
 
-type narrative_ string // This type must support the "comparable" type contraint.
+type name_ string // This type must support the "comparable" type contraint.
 
 // Class Structure
 
-type narrativeClass_ struct {
+type nameClass_ struct {
 	// Declare the class constants.
 	matcher_ *reg.Regexp
 }
 
 // Class Reference
 
-func narrativeClass() *narrativeClass_ {
-	return narrativeClassReference_
+func nameClass() *nameClass_ {
+	return nameClassReference_
 }
 
-var narrativeClassReference_ = &narrativeClass_{
+var nameClassReference_ = &nameClass_{
 	// Initialize the class constants.
 	matcher_: reg.MustCompile(
-		"^\">((?:" + any_ + "|" + eol_ + ")*?)<\"",
+		"^(?:/(?:" + letter_ + "|" + digit_ + "|-)+" + ")+",
 	),
 }
