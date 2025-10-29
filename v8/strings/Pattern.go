@@ -188,7 +188,7 @@ func (v pattern_) AsArray() []rune {
 	return v.AsIntrinsic()
 }
 
-func (v pattern_) GetIterator() uti.IteratorLike[rune] {
+func (v pattern_) GetIterator() uti.Ratcheted[rune] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

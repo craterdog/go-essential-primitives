@@ -232,7 +232,7 @@ func (v binary_) AsArray() []byte {
 	return v.AsIntrinsic()
 }
 
-func (v binary_) GetIterator() uti.IteratorLike[byte] {
+func (v binary_) GetIterator() uti.Ratcheted[byte] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

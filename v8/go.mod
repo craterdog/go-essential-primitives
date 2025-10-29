@@ -3,7 +3,7 @@ module github.com/craterdog/go-essential-primitives/v8
 go 1.25
 
 require (
-	github.com/craterdog/go-essential-utilities/v8 v8.1.0
+	github.com/craterdog/go-essential-utilities/v8 v8.2.0
 	github.com/stretchr/testify v1.11.1
 )
 

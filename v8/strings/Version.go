@@ -224,7 +224,7 @@ func (v version_) AsArray() []uint {
 	return v.AsIntrinsic()
 }
 
-func (v version_) GetIterator() uti.IteratorLike[uint] {
+func (v version_) GetIterator() uti.Ratcheted[uint] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

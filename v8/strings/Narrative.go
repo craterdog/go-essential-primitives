@@ -165,7 +165,7 @@ func (v narrative_) AsArray() []string {
 	return v.AsIntrinsic()
 }
 
-func (v narrative_) GetIterator() uti.IteratorLike[string] {
+func (v narrative_) GetIterator() uti.Ratcheted[string] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

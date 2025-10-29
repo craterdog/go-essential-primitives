@@ -163,7 +163,7 @@ func (v name_) AsArray() []Folder {
 	return v.AsIntrinsic()
 }
 
-func (v name_) GetIterator() uti.IteratorLike[Folder] {
+func (v name_) GetIterator() uti.Ratcheted[Folder] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

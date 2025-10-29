@@ -473,7 +473,7 @@ type Sequential[V any] interface {
 	IsEmpty() bool
 	GetSize() uint
 	AsArray() []V
-	GetIterator() uti.IteratorLike[V]
+	GetIterator() uti.Ratcheted[V]
 }
 
 /*

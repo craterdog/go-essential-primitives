@@ -114,7 +114,7 @@ func (v bytecode_) AsArray() []uint16 {
 	return v.AsIntrinsic()
 }
 
-func (v bytecode_) GetIterator() uti.IteratorLike[uint16] {
+func (v bytecode_) GetIterator() uti.Ratcheted[uint16] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

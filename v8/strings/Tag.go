@@ -163,7 +163,7 @@ func (v tag_) AsArray() []byte {
 	return v.AsIntrinsic()
 }
 
-func (v tag_) GetIterator() uti.IteratorLike[byte] {
+func (v tag_) GetIterator() uti.Ratcheted[byte] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 

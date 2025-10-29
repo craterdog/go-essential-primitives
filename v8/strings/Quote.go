@@ -146,7 +146,7 @@ func (v quote_) AsArray() []rune {
 	return v.AsIntrinsic()
 }
 
-func (v quote_) GetIterator() uti.IteratorLike[rune] {
+func (v quote_) GetIterator() uti.Ratcheted[rune] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
