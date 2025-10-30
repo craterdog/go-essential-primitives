@@ -10,12 +10,13 @@
 ................................................................................
 */
 
-package elements
+package sequences
 
 import (
 	fmt "fmt"
 	uti "github.com/craterdog/go-essential-utilities/v8"
 	reg "regexp"
+	sli "slices"
 )
 
 // CLASS INTERFACE
@@ -29,9 +30,15 @@ func SymbolClass() SymbolClassLike {
 // Constructor Methods
 
 func (c *symbolClass_) Symbol(
-	identifier string,
+	identifier []rune,
 ) SymbolLike {
-	return c.SymbolFromSource("$" + identifier)
+	return c.SymbolFromSource("$" + string(identifier))
+}
+
+func (c *symbolClass_) SymbolFromSequence(
+	sequence Sequential[rune],
+) SymbolLike {
+	return c.Symbol(sequence.AsArray())
 }
 
 func (c *symbolClass_) SymbolFromSource(
@@ -64,8 +71,8 @@ func (v symbol_) GetClass() SymbolClassLike {
 	return symbolClass()
 }
 
-func (v symbol_) AsIntrinsic() string {
-	return string(v)
+func (v symbol_) AsIntrinsic() []rune {
+	return []rune(v)
 }
 
 func (v symbol_) AsSource() string {
@@ -73,6 +80,109 @@ func (v symbol_) AsSource() string {
 }
 
 // Attribute Methods
+
+// Accessible[rune] Methods
+
+func (v symbol_) GetValue(
+	index int,
+) rune {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return characters[goIndex]
+}
+
+func (v symbol_) GetValues(
+	first int,
+	last int,
+) Sequential[rune] {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return symbolClass().Symbol(characters[goFirst : goLast+1])
+}
+
+func (v symbol_) GetIndex(
+	value rune,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
+// Ordered[SymbolLike] Methods
+
+func (v symbol_) IsBefore(
+	value SymbolLike,
+) bool {
+	return sli.Compare(v.AsIntrinsic(), value.AsIntrinsic()) < 0
+}
+
+// Searchable[rune] Methods
+
+func (v symbol_) ContainsValue(
+	value rune,
+) bool {
+	return sli.Index(v.AsIntrinsic(), value) > -1
+}
+
+func (v symbol_) ContainsAny(
+	values Sequential[rune],
+) bool {
+	var iterator = values.GetIterator()
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if v.ContainsValue(value) {
+			// This set contains at least one of the values.
+			return true
+		}
+	}
+	// This set does not contain any of the values.
+	return false
+}
+
+func (v symbol_) ContainsAll(
+	values Sequential[rune],
+) bool {
+	var iterator = values.GetIterator()
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if !v.ContainsValue(value) {
+			// This set is missing at least one of the values.
+			return false
+		}
+	}
+	// This set does contains all of the values.
+	return true
+}
+
+// Sequential[rune] Methods
+
+func (v symbol_) IsEmpty() bool {
+	return len(v.AsIntrinsic()) == 0
+}
+
+func (v symbol_) GetSize() uint {
+	return uti.ArraySize(v.AsIntrinsic())
+}
+
+func (v symbol_) AsArray() []rune {
+	return v.AsIntrinsic()
+}
+
+func (v symbol_) GetIterator() uti.Ratcheted[rune] {
+	return uti.Iterator(v.AsIntrinsic())
+}
 
 // PROTECTED INTERFACE
 
@@ -90,12 +200,7 @@ func (v symbol_) String() string {
 // each name to lessen the chance of a name collision with other private Go
 // class constants in this package.
 const (
-	digit_      = "\\p{Nd}"
 	identifier_ = "(?:" + letter_ + ")(?:" + letter_ + "|" + digit_ + "|-)*"
-	letter_     = lower_ + "|" + upper_
-	lower_      = "\\p{Ll}"
-	upper_      = "\\p{Lu}"
-	version_    = "v" + ordinal_ + "(?:\\." + ordinal_ + ")*"
 )
 
 // Instance Structure

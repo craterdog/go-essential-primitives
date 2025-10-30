@@ -60,7 +60,6 @@ type (
 	PercentageClassLike  = ele.PercentageClassLike
 	ProbabilityClassLike = ele.ProbabilityClassLike
 	ResourceClassLike    = ele.ResourceClassLike
-	SymbolClassLike      = ele.SymbolClassLike
 )
 
 type (
@@ -73,7 +72,6 @@ type (
 	PercentageLike  = ele.PercentageLike
 	ProbabilityLike = ele.ProbabilityLike
 	ResourceLike    = ele.ResourceLike
-	SymbolLike      = ele.SymbolLike
 )
 
 type (
@@ -97,6 +95,7 @@ type (
 	NarrativeClassLike = seq.NarrativeClassLike
 	PatternClassLike   = seq.PatternClassLike
 	QuoteClassLike     = seq.QuoteClassLike
+	SymbolClassLike    = seq.SymbolClassLike
 	TagClassLike       = seq.TagClassLike
 	VersionClassLike   = seq.VersionClassLike
 )
@@ -108,6 +107,7 @@ type (
 	NarrativeLike = seq.NarrativeLike
 	PatternLike   = seq.PatternLike
 	QuoteLike     = seq.QuoteLike
+	SymbolLike    = seq.SymbolLike
 	TagLike       = seq.TagLike
 	VersionLike   = seq.VersionLike
 )
@@ -371,26 +371,6 @@ func ResourceFromUri(
 	)
 }
 
-func SymbolClass() SymbolClassLike {
-	return ele.SymbolClass()
-}
-
-func Symbol(
-	identifier string,
-) SymbolLike {
-	return SymbolClass().Symbol(
-		identifier,
-	)
-}
-
-func SymbolFromSource(
-	source string,
-) SymbolLike {
-	return SymbolClass().SymbolFromSource(
-		source,
-	)
-}
-
 // Sequences
 
 func BinaryClass() BinaryClassLike {
@@ -557,6 +537,34 @@ func QuoteFromSource(
 	source string,
 ) QuoteLike {
 	return QuoteClass().QuoteFromSource(
+		source,
+	)
+}
+
+func SymbolClass() SymbolClassLike {
+	return seq.SymbolClass()
+}
+
+func Symbol(
+	identifier []rune,
+) SymbolLike {
+	return SymbolClass().Symbol(
+		identifier,
+	)
+}
+
+func SymbolFromSequence(
+	sequence seq.Sequential[rune],
+) SymbolLike {
+	return SymbolClass().SymbolFromSequence(
+		sequence,
+	)
+}
+
+func SymbolFromSource(
+	source string,
+) SymbolLike {
+	return SymbolClass().SymbolFromSource(
 		source,
 	)
 }

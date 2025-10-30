@@ -164,7 +164,46 @@ func (v version_) AsSource() string {
 
 // Attribute Methods
 
-// Spectral Methods
+// Accessible[uint] Methods
+
+func (v version_) GetValue(
+	index int,
+) uint {
+	var ordinals = v.AsIntrinsic()
+	var size = uti.ArraySize(ordinals)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return ordinals[goIndex]
+}
+
+func (v version_) GetValues(
+	first int,
+	last int,
+) Sequential[uint] {
+	var ordinals = v.AsIntrinsic()
+	var size = uti.ArraySize(ordinals)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return versionClass().Version(ordinals[goFirst : goLast+1])
+}
+
+func (v version_) GetIndex(
+	value uint,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
+// Ordered[VersionLike] Methods
 
 func (v version_) IsBefore(
 	value VersionLike,
@@ -226,45 +265,6 @@ func (v version_) AsArray() []uint {
 
 func (v version_) GetIterator() uti.Ratcheted[uint] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[uint] Methods
-
-func (v version_) GetValue(
-	index int,
-) uint {
-	var ordinals = v.AsIntrinsic()
-	var size = uti.ArraySize(ordinals)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return ordinals[goIndex]
-}
-
-func (v version_) GetValues(
-	first int,
-	last int,
-) Sequential[uint] {
-	var ordinals = v.AsIntrinsic()
-	var size = uti.ArraySize(ordinals)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return versionClass().Version(ordinals[goFirst : goLast+1])
-}
-
-func (v version_) GetIndex(
-	value uint,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE

@@ -111,6 +111,45 @@ func (v tag_) GetHash() uint64 {
 
 // Attribute Methods
 
+// Accessible[byte] Methods
+
+func (v tag_) GetValue(
+	index int,
+) byte {
+	var bytes = v.AsIntrinsic()
+	var size = uti.ArraySize(bytes)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return bytes[goIndex]
+}
+
+func (v tag_) GetValues(
+	first int,
+	last int,
+) Sequential[byte] {
+	var bytes = v.AsIntrinsic()
+	var size = uti.ArraySize(bytes)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return tagClass().Tag(bytes[goFirst : goLast+1])
+}
+
+func (v tag_) GetIndex(
+	value byte,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
 // Searchable[byte] Methods
 
 func (v tag_) ContainsValue(
@@ -165,45 +204,6 @@ func (v tag_) AsArray() []byte {
 
 func (v tag_) GetIterator() uti.Ratcheted[byte] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[byte] Methods
-
-func (v tag_) GetValue(
-	index int,
-) byte {
-	var bytes = v.AsIntrinsic()
-	var size = uti.ArraySize(bytes)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return bytes[goIndex]
-}
-
-func (v tag_) GetValues(
-	first int,
-	last int,
-) Sequential[byte] {
-	var bytes = v.AsIntrinsic()
-	var size = uti.ArraySize(bytes)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return tagClass().Tag(bytes[goFirst : goLast+1])
-}
-
-func (v tag_) GetIndex(
-	value byte,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE

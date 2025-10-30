@@ -113,6 +113,45 @@ func (v narrative_) AsSource() string {
 
 // Attribute Methods
 
+// Accessible[string] Methods
+
+func (v narrative_) GetValue(
+	index int,
+) string {
+	var lines = v.AsIntrinsic()
+	var size = uti.ArraySize(lines)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return lines[goIndex]
+}
+
+func (v narrative_) GetValues(
+	first int,
+	last int,
+) Sequential[string] {
+	var lines = v.AsIntrinsic()
+	var size = uti.ArraySize(lines)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return narrativeClass().Narrative(lines[goFirst : goLast+1])
+}
+
+func (v narrative_) GetIndex(
+	value string,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
 // Searchable[string] Methods
 
 func (v narrative_) ContainsValue(
@@ -167,45 +206,6 @@ func (v narrative_) AsArray() []string {
 
 func (v narrative_) GetIterator() uti.Ratcheted[string] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[string] Methods
-
-func (v narrative_) GetValue(
-	index int,
-) string {
-	var lines = v.AsIntrinsic()
-	var size = uti.ArraySize(lines)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return lines[goIndex]
-}
-
-func (v narrative_) GetValues(
-	first int,
-	last int,
-) Sequential[string] {
-	var lines = v.AsIntrinsic()
-	var size = uti.ArraySize(lines)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return narrativeClass().Narrative(lines[goFirst : goLast+1])
-}
-
-func (v narrative_) GetIndex(
-	value string,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE

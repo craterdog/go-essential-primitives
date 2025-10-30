@@ -931,7 +931,7 @@ func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
 }
 
 func TestSymbol(t *tes.T) {
-	var foobar = "foo-bar"
+	var foobar = []rune("foo-bar")
 	var v = pri.Symbol(foobar)
 	ass.Equal(t, foobar, v.AsIntrinsic())
 }

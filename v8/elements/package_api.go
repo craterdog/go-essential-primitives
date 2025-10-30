@@ -416,24 +416,6 @@ type ResourceClassLike interface {
 	Undefined() ResourceLike
 }
 
-/*
-SymbolClassLike is a class interface that defines the complete set of
-class constants, constructors and functions that must be supported by each
-symbol-like concrete class.
-*/
-type SymbolClassLike interface {
-	// Constructor Methods
-	Symbol(
-		identifier string,
-	) SymbolLike
-	SymbolFromSource(
-		source string,
-	) SymbolLike
-
-	// Constant Methods
-	Undefined() SymbolLike
-}
-
 // INSTANCE DECLARATIONS
 
 /*
@@ -592,18 +574,6 @@ type ResourceLike interface {
 	GetPath() string
 	GetQuery() string
 	GetFragment() string
-}
-
-/*
-SymbolLike is an instance interface that declares the complete set of principal,
-attribute and aspect methods that must be supported by each instance of a
-concrete symbol-like class.
-*/
-type SymbolLike interface {
-	// Principal Methods
-	GetClass() SymbolClassLike
-	AsIntrinsic() string
-	AsSource() string
 }
 
 // ASPECT DECLARATIONS

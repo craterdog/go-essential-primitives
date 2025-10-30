@@ -103,7 +103,46 @@ func (v name_) AsSource() string {
 
 // Attribute Methods
 
-// Spectral Methods
+// Accessible[Folder] Methods
+
+func (v name_) GetValue(
+	index int,
+) Folder {
+	var folders = v.AsIntrinsic()
+	var size = uti.ArraySize(folders)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return folders[goIndex]
+}
+
+func (v name_) GetValues(
+	first int,
+	last int,
+) Sequential[Folder] {
+	var folders = v.AsIntrinsic()
+	var size = uti.ArraySize(folders)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return nameClass().Name(folders[goFirst : goLast+1])
+}
+
+func (v name_) GetIndex(
+	value Folder,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
+// Ordered[NameLike] Methods
 
 func (v name_) IsBefore(
 	value NameLike,
@@ -165,45 +204,6 @@ func (v name_) AsArray() []Folder {
 
 func (v name_) GetIterator() uti.Ratcheted[Folder] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[Folder] Methods
-
-func (v name_) GetValue(
-	index int,
-) Folder {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return folders[goIndex]
-}
-
-func (v name_) GetValues(
-	first int,
-	last int,
-) Sequential[Folder] {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return nameClass().Name(folders[goFirst : goLast+1])
-}
-
-func (v name_) GetIndex(
-	value Folder,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE

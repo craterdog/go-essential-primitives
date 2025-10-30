@@ -209,6 +209,27 @@ type QuoteClassLike interface {
 }
 
 /*
+SymbolClassLike is a class interface that defines the complete set of
+class constants, constructors and functions that must be supported by each
+symbol-like concrete class.
+*/
+type SymbolClassLike interface {
+	// Constructor Methods
+	Symbol(
+		identifier []rune,
+	) SymbolLike
+	SymbolFromSequence(
+		sequence Sequential[rune],
+	) SymbolLike
+	SymbolFromSource(
+		source string,
+	) SymbolLike
+
+	// Constant Methods
+	Undefined() SymbolLike
+}
+
+/*
 TagClassLike is a class interface that defines the complete set of
 class constants, constructors and functions that must be supported by each
 tag-like concrete class.
@@ -312,9 +333,9 @@ type NameLike interface {
 
 	// Aspect Interfaces
 	Accessible[Folder]
+	Ordered[NameLike]
 	Searchable[Folder]
 	Sequential[Folder]
-	Ordered[NameLike]
 }
 
 /*
@@ -371,9 +392,27 @@ type QuoteLike interface {
 
 	// Aspect Interfaces
 	Accessible[rune]
+	Ordered[QuoteLike]
 	Searchable[rune]
 	Sequential[rune]
-	Ordered[QuoteLike]
+}
+
+/*
+SymbolLike is an instance interface that declares the complete set of principal,
+attribute and aspect methods that must be supported by each instance of a
+concrete symbol-like class.
+*/
+type SymbolLike interface {
+	// Principal Methods
+	GetClass() SymbolClassLike
+	AsIntrinsic() []rune
+	AsSource() string
+
+	// Aspect Interfaces
+	Accessible[rune]
+	Ordered[SymbolLike]
+	Searchable[rune]
+	Sequential[rune]
 }
 
 /*
@@ -407,9 +446,9 @@ type VersionLike interface {
 
 	// Aspect Interfaces
 	Accessible[uint]
+	Ordered[VersionLike]
 	Searchable[uint]
 	Sequential[uint]
-	Ordered[VersionLike]
 }
 
 // ASPECT DECLARATIONS

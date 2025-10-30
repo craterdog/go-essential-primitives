@@ -136,6 +136,45 @@ func (v pattern_) GetMatches(
 
 // Attribute Methods
 
+// Accessible[rune] Methods
+
+func (v pattern_) GetValue(
+	index int,
+) rune {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return characters[goIndex]
+}
+
+func (v pattern_) GetValues(
+	first int,
+	last int,
+) Sequential[rune] {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return patternClass().Pattern(characters[goFirst : goLast+1])
+}
+
+func (v pattern_) GetIndex(
+	value rune,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
 // Searchable[rune] Methods
 
 func (v pattern_) ContainsValue(
@@ -190,45 +229,6 @@ func (v pattern_) AsArray() []rune {
 
 func (v pattern_) GetIterator() uti.Ratcheted[rune] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[rune] Methods
-
-func (v pattern_) GetValue(
-	index int,
-) rune {
-	var characters = v.AsIntrinsic()
-	var size = uti.ArraySize(characters)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return characters[goIndex]
-}
-
-func (v pattern_) GetValues(
-	first int,
-	last int,
-) Sequential[rune] {
-	var characters = v.AsIntrinsic()
-	var size = uti.ArraySize(characters)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return patternClass().Pattern(characters[goFirst : goLast+1])
-}
-
-func (v pattern_) GetIndex(
-	value rune,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE

@@ -86,7 +86,46 @@ func (v quote_) AsSource() string {
 
 // Attribute Methods
 
-// Spectral Methods
+// Accessible[rune] Methods
+
+func (v quote_) GetValue(
+	index int,
+) rune {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goIndex = uti.RelativeToCardinal(index, size)
+	return characters[goIndex]
+}
+
+func (v quote_) GetValues(
+	first int,
+	last int,
+) Sequential[rune] {
+	var characters = v.AsIntrinsic()
+	var size = uti.ArraySize(characters)
+	var goFirst = uti.RelativeToCardinal(first, size)
+	var goLast = uti.RelativeToCardinal(last, size)
+	return quoteClass().Quote(characters[goFirst : goLast+1])
+}
+
+func (v quote_) GetIndex(
+	value rune,
+) int {
+	var index int
+	var iterator = v.GetIterator()
+	for iterator.HasNext() {
+		index++
+		var candidate = iterator.GetNext()
+		if candidate == value {
+			// Found the value.
+			return index
+		}
+	}
+	// The value was not found.
+	return 0
+}
+
+// Ordered[QuoteLike] Methods
 
 func (v quote_) IsBefore(
 	value QuoteLike,
@@ -148,45 +187,6 @@ func (v quote_) AsArray() []rune {
 
 func (v quote_) GetIterator() uti.Ratcheted[rune] {
 	return uti.Iterator(v.AsIntrinsic())
-}
-
-// Accessible[rune] Methods
-
-func (v quote_) GetValue(
-	index int,
-) rune {
-	var characters = v.AsIntrinsic()
-	var size = uti.ArraySize(characters)
-	var goIndex = uti.RelativeToCardinal(index, size)
-	return characters[goIndex]
-}
-
-func (v quote_) GetValues(
-	first int,
-	last int,
-) Sequential[rune] {
-	var characters = v.AsIntrinsic()
-	var size = uti.ArraySize(characters)
-	var goFirst = uti.RelativeToCardinal(first, size)
-	var goLast = uti.RelativeToCardinal(last, size)
-	return quoteClass().Quote(characters[goFirst : goLast+1])
-}
-
-func (v quote_) GetIndex(
-	value rune,
-) int {
-	var index int
-	var iterator = v.GetIterator()
-	for iterator.HasNext() {
-		index++
-		var candidate = iterator.GetNext()
-		if candidate == value {
-			// Found the value.
-			return index
-		}
-	}
-	// The value was not found.
-	return 0
 }
 
 // PROTECTED INTERFACE
