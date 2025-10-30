@@ -168,7 +168,7 @@ func DurationClass() DurationClassLike {
 }
 
 func Duration(
-	milliseconds int,
+	milliseconds uint,
 ) DurationLike {
 	return DurationClass().Duration(
 		milliseconds,

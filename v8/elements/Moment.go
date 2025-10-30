@@ -83,7 +83,11 @@ func (c *momentClass_) Duration(
 	first MomentLike,
 	second MomentLike,
 ) DurationLike {
-	return durationClass().Duration(second.AsInteger() - first.AsInteger())
+	var delta = second.AsInteger() - first.AsInteger()
+	if delta < 0 {
+		delta = -delta
+	}
+	return durationClass().Duration(uint(delta))
 }
 
 // INSTANCE INTERFACE

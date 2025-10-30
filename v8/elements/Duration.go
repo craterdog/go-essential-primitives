@@ -32,12 +32,9 @@ func DurationClass() DurationClassLike {
 // Constructor Methods
 
 func (c *durationClass_) Duration(
-	milliseconds int,
+	milliseconds uint,
 ) DurationLike {
-	if milliseconds < 0 {
-		milliseconds = -milliseconds
-	}
-	return duration_(uint(milliseconds))
+	return duration_(milliseconds)
 }
 
 func (c *durationClass_) DurationFromSource(

@@ -165,7 +165,7 @@ duration-like concrete class.
 type DurationClassLike interface {
 	// Constructor Methods
 	Duration(
-		milliseconds int,
+		milliseconds uint,
 	) DurationLike
 	DurationFromSource(
 		source string,
