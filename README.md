@@ -16,7 +16,6 @@ some useful high-level immutable primitive data types:
  * `Percentage`
  * `Probability`
  * `Resource`
- * `Symbol`
 
 **Strings**
  * `Binary`
@@ -25,6 +24,7 @@ some useful high-level immutable primitive data types:
  * `Narrative`
  * `Pattern`
  * `Quote`
+ * `Symbol`
  * `Tag`
  * `Version`
 
