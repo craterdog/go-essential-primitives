@@ -305,9 +305,22 @@ func TestIntegerMoments(t *tes.T) {
 }
 
 func TestStringMoments(t *tes.T) {
+	var sources = []string{
+		"<1-01-01T01:01:01.001>",
+		"<1-01-01T01:01:01>",
+		"<1-01-01T01:01>",
+		"<1-01-01T01>",
+		"<1-01-01>",
+	}
+	for _, source := range sources {
+		var moment = pri.MomentFromSource(source)
+		ass.Equal(t, source, moment.AsSource())
+	}
 	var v = pri.MomentFromSource("<-1-02-03T04:05:06.700>")
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, "<-1-02-03T04:05:06.700>", v.AsSource())
+	v = pri.Moment(-62167219200000)
+	ass.Equal(t, "<0-01-01>", v.AsSource())
 }
 
 func TestMomentsLibrary(t *tes.T) {

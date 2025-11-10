@@ -116,27 +116,26 @@ func (v moment_) AsSource() string {
 	var second = v.GetSeconds()
 	var millisecond = v.GetMilliseconds()
 	builder.WriteString("<")
-	builder.WriteString(stc.FormatInt(int64(year), 10))
-	if month > 1 || day > 1 || hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
+	if v.IsNegative() {
 		builder.WriteString("-")
-		builder.WriteString(momentClass().formatOrdinal(month, 2))
-		if day > 1 || hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
-			builder.WriteString("-")
-			builder.WriteString(momentClass().formatOrdinal(day, 2))
-			if hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
-				builder.WriteString("T")
-				builder.WriteString(momentClass().formatOrdinal(hour, 2))
-				if minute > 0 || second > 0 || millisecond > 0 {
-					builder.WriteString(":")
-					builder.WriteString(momentClass().formatOrdinal(minute, 2))
-					if second > 0 || millisecond > 0 {
-						builder.WriteString(":")
-						builder.WriteString(momentClass().formatOrdinal(second, 2))
-						if millisecond > 0 {
-							builder.WriteString(".")
-							builder.WriteString(momentClass().formatOrdinal(millisecond, 3))
-						}
-					}
+	}
+	builder.WriteString(momentClass().formatOrdinal(year, 0))
+	builder.WriteString("-")
+	builder.WriteString(momentClass().formatOrdinal(month, 2))
+	builder.WriteString("-")
+	builder.WriteString(momentClass().formatOrdinal(day, 2))
+	if hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
+		builder.WriteString("T")
+		builder.WriteString(momentClass().formatOrdinal(hour, 2))
+		if minute > 0 || second > 0 || millisecond > 0 {
+			builder.WriteString(":")
+			builder.WriteString(momentClass().formatOrdinal(minute, 2))
+			if second > 0 || millisecond > 0 {
+				builder.WriteString(":")
+				builder.WriteString(momentClass().formatOrdinal(second, 2))
+				if millisecond > 0 {
+					builder.WriteString(".")
+					builder.WriteString(momentClass().formatOrdinal(millisecond, 3))
 				}
 			}
 		}
@@ -168,7 +167,7 @@ func (v moment_) IsMaximum() bool {
 // Polarized Methods
 
 func (v moment_) IsNegative() bool {
-	return v < 0
+	return v < -62167219200000
 }
 
 // Temporal Methods
@@ -252,6 +251,9 @@ func (v moment_) GetMonths() uint {
 func (v moment_) GetYears() uint {
 	var time = v.asTime()
 	var years = time.Year()
+	if years < 0 {
+		years = -years
+	}
 	return uint(years)
 }
 
@@ -264,7 +266,10 @@ func (v moment_) String() string {
 // Private Methods
 
 func (c *momentClass_) formatOrdinal(ordinal uint, digits int) string {
-	return fmt.Sprintf("%0"+stc.Itoa(digits)+"d", ordinal)
+	if digits > 0 {
+		return fmt.Sprintf("%0"+stc.Itoa(digits)+"d", ordinal)
+	}
+	return fmt.Sprintf("%0d", ordinal)
 }
 
 // This list contains the supported ISO 8601 date-time formats delimited by
@@ -309,6 +314,7 @@ var hackedIsoFormats_ = [...]string{
 // we must resort to some hacking with this private function...
 func (c *momentClass_) momentFromMatches(matches []string) int {
 	// First, we replace the year with year zero.
+	var sign = matches[2]
 	var yearString = matches[3]
 	var patched = sts.Replace(matches[1], yearString, "0000", 1)
 
@@ -319,12 +325,11 @@ func (c *momentClass_) momentFromMatches(matches []string) int {
 
 			// We found a match, now we add back in the correct year.
 			var year, _ = stc.ParseInt(yearString, 10, 64)
-			date = date.AddDate(int(year), 0, 0)
-			if sts.HasPrefix(format, "-") {
-
+			if sign == "-" {
 				// We change the positive date to a negative one.
-				date = date.AddDate(-2*date.Year(), 0, 0)
+				year = -year
 			}
+			date = date.AddDate(int(year), 0, 0)
 
 			// And return the correct date as milliseconds.
 			var milliseconds = int(date.UnixMilli())
@@ -379,9 +384,9 @@ func momentClass() *momentClass_ {
 var momentClassReference_ = &momentClass_{
 	// Initialize the class constants.
 	matcher_: reg.MustCompile(
-		"^<((" + sign_ + ")?(" + year_ + ")(?:-(" + month_ + ")(?:-(" + day_ +
-			")(?:T(" + hour_ + ")(?::(" + minute_ + ")(:(?:" + second_ +
-			")(?:" + fraction_ + ")?)?)?)?)?)?)>",
+		"^<((" + sign_ + ")?(" + year_ + ")-(" + month_ + ")-(" + day_ +
+			")(?:T(" + hour_ + ")(?::(" + minute_ + ")(?::(" + second_ +
+			")(" + fraction_ + ")?)?)?)?)>",
 	),
 	epoch_: moment_(0),
 }
