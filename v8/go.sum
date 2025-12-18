@@ -1,5 +1,5 @@
-github.com/craterdog/go-essential-utilities/v8 v8.2.0 h1:C9kZJznZ/JrD5WM4DrEQN2aqvXFEBVgFs7gyx3i9ms4=
-github.com/craterdog/go-essential-utilities/v8 v8.2.0/go.mod h1:XP2oMvRbh91FtPEBXV0iDfrq18U1NonPi/+z5s7hzV4=
+github.com/craterdog/go-essential-utilities/v8 v8.3.0 h1:KadMDR9Gkl1QrB37RtSaRl1/EOxhhwHLy7H0iCsfrCU=
+github.com/craterdog/go-essential-utilities/v8 v8.3.0/go.mod h1:XP2oMvRbh91FtPEBXV0iDfrq18U1NonPi/+z5s7hzV4=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
