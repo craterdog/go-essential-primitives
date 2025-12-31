@@ -487,6 +487,17 @@ type Accessible[V any] interface {
 }
 
 /*
+Ordered[V any] is an aspect interface that declares a set of method signatures
+that must be supported by each instance of an ordered concrete class.
+*/
+type Ordered[V any] interface {
+	AsSource() string
+	IsBefore(
+		value V,
+	) bool
+}
+
+/*
 Searchable[V any] is an aspect interface that declares a set of method
 signatures that must be supported by each instance of a searchable concrete
 class.
@@ -513,15 +524,4 @@ type Sequential[V any] interface {
 	GetSize() uint
 	AsArray() []V
 	GetIterator() uti.Ratcheted[V]
-}
-
-/*
-Ordered[V any] is an aspect interface that declares a set of method signatures
-that must be supported by each instance of an ordered concrete class.
-*/
-type Ordered[V any] interface {
-	AsSource() string
-	IsBefore(
-		value V,
-	) bool
 }

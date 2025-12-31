@@ -114,9 +114,9 @@ type (
 
 type (
 	Accessible[V any] = seq.Accessible[V]
+	Ordered[V any]    = seq.Ordered[V]
 	Searchable[V any] = seq.Searchable[V]
 	Sequential[V any] = seq.Sequential[V]
-	Ordered[V any]    = seq.Ordered[V]
 )
 
 // CLASS ACCESSORS
