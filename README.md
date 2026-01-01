@@ -40,4 +40,4 @@ For more information on this project click on the following links:
 Project contributors are always welcome. Check out the contributing guidelines
 [here](https://github.com/craterdog/go-essential-primitives/blob/main/.github/CONTRIBUTING.md).
 
-<H5 align="center"> Copyright © 2009-2025. Crater Dog Technologies™. All rights reserved. </H5>
+<H5 align="center"> Copyright © 2009-2026. Crater Dog Technologies™. All rights reserved. </H5>
