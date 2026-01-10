@@ -311,6 +311,7 @@ func TestStringMoments(t *tes.T) {
 		"<1-01-01T01:01>",
 		"<1-01-01T01>",
 		"<1-01-01>",
+		"<1-10-10>",
 	}
 	for _, source := range sources {
 		var moment = pri.MomentFromSource(source)
