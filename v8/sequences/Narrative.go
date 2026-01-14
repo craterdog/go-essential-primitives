@@ -99,10 +99,9 @@ func (v narrative_) AsIntrinsic() []string {
 	decoded = sts.ReplaceAll(decoded, `<\"`, `<"`)
 	var lines = sts.Split(decoded, "\n")
 	lines = lines[1:] // Ignore the first empty line.
-	var size = len(lines)
-	if size > 0 {
-		size--
-		lines = lines[:size] // Ignore the last empty line.
+	var length = len(lines)
+	if length > 0 {
+		lines = lines[:length-1] // Ignore the last empty line.
 	}
 	return lines
 }

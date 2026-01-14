@@ -279,6 +279,18 @@ func TestGlyphs(t *tes.T) {
 	ass.Equal(t, "'\t'", v.AsSource())
 }
 
+func TestIdentifier(t *tes.T) {
+	var a = []rune("A")
+	var v = pri.Identifier(a)
+	ass.Equal(t, a, v.AsIntrinsic())
+}
+
+func TestIdentifierFromSource(t *tes.T) {
+	var foobar = "foo-bar"
+	var v = pri.IdentifierFromSource(foobar)
+	ass.Equal(t, foobar, v.AsSource())
+}
+
 var MomentClass = pri.MomentClass()
 
 func TestIntegerMoments(t *tes.T) {
@@ -945,9 +957,9 @@ func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
 }
 
 func TestSymbol(t *tes.T) {
-	var foobar = []rune("foo-bar")
-	var v = pri.Symbol(foobar)
-	ass.Equal(t, foobar, v.AsIntrinsic())
+	var a = []rune("A")
+	var v = pri.Symbol(a)
+	ass.Equal(t, a, v.AsIntrinsic())
 }
 
 func TestSymbolFromSource(t *tes.T) {
@@ -1025,8 +1037,8 @@ func TestName(t *tes.T) {
 	ass.Equal(t, "/bali-nebula/types/abstractions/5String", v1.AsSource())
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 4, int(v1.GetSize()))
-	ass.Equal(t, pri.Folder("bali-nebula"), v1.GetValue(1))
-	ass.Equal(t, pri.Folder("5String"), v1.GetValue(-1))
+	ass.Equal(t, "bali-nebula", v1.GetValue(1))
+	ass.Equal(t, "5String", v1.GetValue(-1))
 	var v2 = pri.Name(v1.AsArray())
 	ass.Equal(t, v1.AsSource(), v2.AsSource())
 	var v3 = pri.NameFromSequence(v1.GetValues(1, 2))

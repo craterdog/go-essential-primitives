@@ -37,12 +37,6 @@ import (
 
 // TYPE DECLARATIONS
 
-/*
-Folder is a constrained type representing a string of the form:
-['0'..'9' 'A'..'Z' 'a'..'z'] (('-' | '.')? ['0'..'9' 'A'..'Z' 'a'..'z'])+
-*/
-type Folder string
-
 // FUNCTIONAL DECLARATIONS
 
 // CLASS DECLARATIONS
@@ -109,6 +103,27 @@ type BytecodeClassLike interface {
 }
 
 /*
+IdentifierClassLike is a class interface that defines the complete set of
+class constants, constructors and functions that must be supported by each
+identifier-like concrete class.
+
+An identifier is a constrained type of UTF8 string with the form:
+(LOWER | UPPER) ('-'? (LOWER | UPPER | DIGIT))+
+*/
+type IdentifierClassLike interface {
+	// Constructor Methods
+	Identifier(
+		characters []rune,
+	) IdentifierLike
+	IdentifierFromSequence(
+		sequence Sequential[rune],
+	) IdentifierLike
+	IdentifierFromSource(
+		source string,
+	) IdentifierLike
+}
+
+/*
 NameClassLike is a class interface that defines the complete set of
 class constants, constructors and functions that must be supported by each
 name-like concrete class.
@@ -116,10 +131,10 @@ name-like concrete class.
 type NameClassLike interface {
 	// Constructor Methods
 	Name(
-		folders []Folder,
+		segments []string,
 	) NameLike
 	NameFromSequence(
-		sequence Sequential[Folder],
+		sequence Sequential[string],
 	) NameLike
 	NameFromSource(
 		source string,
@@ -321,6 +336,24 @@ type BytecodeLike interface {
 }
 
 /*
+IdentifierLike is an instance interface that declares the complete set of
+principal, attribute and aspect methods that must be supported by each instance
+of a concrete identifier-like class.
+*/
+type IdentifierLike interface {
+	// Principal Methods
+	GetClass() IdentifierClassLike
+	AsIntrinsic() []rune
+	AsSource() string
+
+	// Aspect Interfaces
+	Accessible[rune]
+	Ordered[IdentifierLike]
+	Searchable[rune]
+	Sequential[rune]
+}
+
+/*
 NameLike is an instance interface that declares the complete set of principal,
 attribute and aspect methods that must be supported by each instance of a
 concrete name-like class.
@@ -328,14 +361,14 @@ concrete name-like class.
 type NameLike interface {
 	// Principal Methods
 	GetClass() NameClassLike
-	AsIntrinsic() []Folder
+	AsIntrinsic() []string
 	AsSource() string
 
 	// Aspect Interfaces
-	Accessible[Folder]
+	Accessible[string]
 	Ordered[NameLike]
-	Searchable[Folder]
-	Sequential[Folder]
+	Searchable[string]
+	Sequential[string]
 }
 
 /*

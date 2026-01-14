@@ -24,63 +24,63 @@ import (
 
 // Access Function
 
-func QuoteClass() QuoteClassLike {
-	return quoteClass()
+func IdentifierClass() IdentifierClassLike {
+	return identifierClass()
 }
 
 // Constructor Methods
 
-func (c *quoteClass_) Quote(
+func (c *identifierClass_) Identifier(
 	characters []rune,
-) QuoteLike {
-	return quote_(stc.Quote(string(characters)))
+) IdentifierLike {
+	return identifier_(stc.Quote(string(characters)))
 }
 
-func (c *quoteClass_) QuoteFromSequence(
+func (c *identifierClass_) IdentifierFromSequence(
 	sequence Sequential[rune],
-) QuoteLike {
-	return c.Quote(sequence.AsArray())
+) IdentifierLike {
+	return c.Identifier(sequence.AsArray())
 }
 
-func (c *quoteClass_) QuoteFromSource(
+func (c *identifierClass_) IdentifierFromSource(
 	source string,
-) QuoteLike {
+) IdentifierLike {
 	var matches = c.matcher_.FindStringSubmatch(source)
 	if uti.IsUndefined(matches) {
 		var message = fmt.Sprintf(
-			"An illegal string was passed to the quote constructor method: %s",
+			"An illegal string was passed to the identifier constructor method: %s",
 			source,
 		)
 		panic(message)
 	}
-	return quote_(source)
+	return identifier_(source)
 }
 
 // Constant Methods
 
 // Function Methods
 
-func (c *quoteClass_) Concatenate(
-	first QuoteLike,
-	second QuoteLike,
-) QuoteLike {
-	return c.Quote(uti.CombineArrays(first.AsIntrinsic(), second.AsIntrinsic()))
+func (c *identifierClass_) Concatenate(
+	first IdentifierLike,
+	second IdentifierLike,
+) IdentifierLike {
+	return c.Identifier(uti.CombineArrays(first.AsIntrinsic(), second.AsIntrinsic()))
 }
 
 // INSTANCE INTERFACE
 
 // Principal Methods
 
-func (v quote_) GetClass() QuoteClassLike {
-	return quoteClass()
+func (v identifier_) GetClass() IdentifierClassLike {
+	return identifierClass()
 }
 
-func (v quote_) AsIntrinsic() []rune {
-	var unquoted, _ = stc.Unquote(string(v)) // Strip off the double quotes.
-	return []rune(unquoted)
+func (v identifier_) AsIntrinsic() []rune {
+	var unidentifierd, _ = stc.Unquote(string(v)) // Strip off the double identifiers.
+	return []rune(unidentifierd)
 }
 
-func (v quote_) AsSource() string {
+func (v identifier_) AsSource() string {
 	return string(v)
 }
 
@@ -88,7 +88,7 @@ func (v quote_) AsSource() string {
 
 // Accessible[rune] Methods
 
-func (v quote_) GetValue(
+func (v identifier_) GetValue(
 	index int,
 ) rune {
 	var characters = v.AsIntrinsic()
@@ -97,7 +97,7 @@ func (v quote_) GetValue(
 	return characters[goIndex]
 }
 
-func (v quote_) GetValues(
+func (v identifier_) GetValues(
 	first int,
 	last int,
 ) Sequential[rune] {
@@ -105,10 +105,10 @@ func (v quote_) GetValues(
 	var size = uti.ArraySize(characters)
 	var goFirst = uti.RelativeToCardinal(first, size)
 	var goLast = uti.RelativeToCardinal(last, size)
-	return quoteClass().Quote(characters[goFirst : goLast+1])
+	return identifierClass().Identifier(characters[goFirst : goLast+1])
 }
 
-func (v quote_) GetIndex(
+func (v identifier_) GetIndex(
 	value rune,
 ) int {
 	var index int
@@ -125,23 +125,23 @@ func (v quote_) GetIndex(
 	return 0
 }
 
-// Ordered[QuoteLike] Methods
+// Ordered[IdentifierLike] Methods
 
-func (v quote_) IsBefore(
-	value QuoteLike,
+func (v identifier_) IsBefore(
+	value IdentifierLike,
 ) bool {
 	return sli.Compare(v.AsIntrinsic(), value.AsIntrinsic()) < 0
 }
 
 // Searchable[rune] Methods
 
-func (v quote_) ContainsValue(
+func (v identifier_) ContainsValue(
 	value rune,
 ) bool {
 	return sli.Index(v.AsIntrinsic(), value) > -1
 }
 
-func (v quote_) ContainsAny(
+func (v identifier_) ContainsAny(
 	values Sequential[rune],
 ) bool {
 	var iterator = values.GetIterator()
@@ -156,7 +156,7 @@ func (v quote_) ContainsAny(
 	return false
 }
 
-func (v quote_) ContainsAll(
+func (v identifier_) ContainsAll(
 	values Sequential[rune],
 ) bool {
 	var iterator = values.GetIterator()
@@ -173,63 +173,50 @@ func (v quote_) ContainsAll(
 
 // Sequential[rune] Methods
 
-func (v quote_) IsEmpty() bool {
+func (v identifier_) IsEmpty() bool {
 	return len(v.AsIntrinsic()) == 0
 }
 
-func (v quote_) GetSize() uint {
+func (v identifier_) GetSize() uint {
 	return uti.ArraySize(v.AsIntrinsic())
 }
 
-func (v quote_) AsArray() []rune {
+func (v identifier_) AsArray() []rune {
 	return v.AsIntrinsic()
 }
 
-func (v quote_) GetIterator() uti.Ratcheted[rune] {
+func (v identifier_) GetIterator() uti.Ratcheted[rune] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
 // PROTECTED INTERFACE
 
-func (v quote_) String() string {
+func (v identifier_) String() string {
 	return v.AsSource()
 }
 
 // Private Methods
 
-// NOTE:
-// These private constants are used to define the private regular expression
-// matcher that is used to match legal string identifiers for this intrinsic type.
-// Unfortunately there is no way to make them private to this class since they
-// must be TRUE Go constants to be used in this way.  We append an underscore to
-// each name to lessen the chance of a name collision with other private Go
-// class constants in this package.
-const (
-	base16_    = base10_ + "|[a-f]"
-	character_ = escape_ + "|\\\\\"|[^\"" + control_ + "]"
-	control_   = "\\p{Cc}"
-	escape_    = "\\\\(?:" + unicode_ + "|[abfnrtv\\\\])"
-	unicode_   = "u(?:" + base16_ + "){4}|U(?:" + base16_ + "){8}"
-)
-
 // Instance Structure
 
-type quote_ string // This type must support the "comparable" type contraint.
+type identifier_ string // This type must support the "comparable" type contraint.
 
 // Class Structure
 
-type quoteClass_ struct {
+type identifierClass_ struct {
 	// Declare the class constants.
 	matcher_ *reg.Regexp
 }
 
 // Class Reference
 
-func quoteClass() *quoteClass_ {
-	return quoteClassReference_
+func identifierClass() *identifierClass_ {
+	return identifierClassReference_
 }
 
-var quoteClassReference_ = &quoteClass_{
+var identifierClassReference_ = &identifierClass_{
 	// Initialize the class constants.
-	matcher_: reg.MustCompile("^\"((?:" + character_ + ")*)\""),
+	matcher_: reg.MustCompile(
+		"^((?:" + letter_ + ")((-)?(?:" + letter_ + "|" + digit_ + "))*)",
+	),
 }

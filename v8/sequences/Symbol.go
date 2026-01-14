@@ -192,17 +192,6 @@ func (v symbol_) String() string {
 
 // Private Methods
 
-// NOTE:
-// These private constants are used to define the private regular expression
-// matcher that is used to match legal string patterns for this intrinsic type.
-// Unfortunately there is no way to make them private to this class since they
-// must be TRUE Go constants to be used in this way.  We append an underscore to
-// each name to lessen the chance of a name collision with other private Go
-// class constants in this package.
-const (
-	identifier_ = "(?:" + letter_ + ")(?:" + letter_ + "|" + digit_ + "|-)*"
-)
-
 // Instance Structure
 
 type symbol_ string
@@ -223,6 +212,8 @@ func symbolClass() *symbolClass_ {
 
 var symbolClassReference_ = &symbolClass_{
 	// Initialize the class constants.
-	matcher_:   reg.MustCompile("^\\$(" + identifier_ + ")"),
+	matcher_: reg.MustCompile(
+		"^\\$((?:" + letter_ + ")((-)?(?:" + letter_ + "|" + digit_ + "))*)",
+	),
 	undefined_: symbol_("$"),
 }

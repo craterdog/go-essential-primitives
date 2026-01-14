@@ -85,31 +85,29 @@ type (
 // Sequences
 
 type (
-	Folder = seq.Folder
+	BinaryClassLike     = seq.BinaryClassLike
+	BytecodeClassLike   = seq.BytecodeClassLike
+	IdentifierClassLike = seq.IdentifierClassLike
+	NameClassLike       = seq.NameClassLike
+	NarrativeClassLike  = seq.NarrativeClassLike
+	PatternClassLike    = seq.PatternClassLike
+	QuoteClassLike      = seq.QuoteClassLike
+	SymbolClassLike     = seq.SymbolClassLike
+	TagClassLike        = seq.TagClassLike
+	VersionClassLike    = seq.VersionClassLike
 )
 
 type (
-	BinaryClassLike    = seq.BinaryClassLike
-	BytecodeClassLike  = seq.BytecodeClassLike
-	NameClassLike      = seq.NameClassLike
-	NarrativeClassLike = seq.NarrativeClassLike
-	PatternClassLike   = seq.PatternClassLike
-	QuoteClassLike     = seq.QuoteClassLike
-	SymbolClassLike    = seq.SymbolClassLike
-	TagClassLike       = seq.TagClassLike
-	VersionClassLike   = seq.VersionClassLike
-)
-
-type (
-	BinaryLike    = seq.BinaryLike
-	BytecodeLike  = seq.BytecodeLike
-	NameLike      = seq.NameLike
-	NarrativeLike = seq.NarrativeLike
-	PatternLike   = seq.PatternLike
-	QuoteLike     = seq.QuoteLike
-	SymbolLike    = seq.SymbolLike
-	TagLike       = seq.TagLike
-	VersionLike   = seq.VersionLike
+	BinaryLike     = seq.BinaryLike
+	BytecodeLike   = seq.BytecodeLike
+	IdentifierLike = seq.IdentifierLike
+	NameLike       = seq.NameLike
+	NarrativeLike  = seq.NarrativeLike
+	PatternLike    = seq.PatternLike
+	QuoteLike      = seq.QuoteLike
+	SymbolLike     = seq.SymbolLike
+	TagLike        = seq.TagLike
+	VersionLike    = seq.VersionLike
 )
 
 type (
@@ -429,20 +427,48 @@ func BytecodeFromSource(
 	)
 }
 
+func IdentifierClass() IdentifierClassLike {
+	return seq.IdentifierClass()
+}
+
+func Identifier(
+	characters []rune,
+) IdentifierLike {
+	return IdentifierClass().Identifier(
+		characters,
+	)
+}
+
+func IdentifierFromSequence(
+	sequence seq.Sequential[rune],
+) IdentifierLike {
+	return IdentifierClass().IdentifierFromSequence(
+		sequence,
+	)
+}
+
+func IdentifierFromSource(
+	source string,
+) IdentifierLike {
+	return IdentifierClass().IdentifierFromSource(
+		source,
+	)
+}
+
 func NameClass() NameClassLike {
 	return seq.NameClass()
 }
 
 func Name(
-	folders []seq.Folder,
+	segments []string,
 ) NameLike {
 	return NameClass().Name(
-		folders,
+		segments,
 	)
 }
 
 func NameFromSequence(
-	sequence seq.Sequential[seq.Folder],
+	sequence seq.Sequential[string],
 ) NameLike {
 	return NameClass().NameFromSequence(
 		sequence,

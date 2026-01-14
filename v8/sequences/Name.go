@@ -31,17 +31,15 @@ func NameClass() NameClassLike {
 // Constructor Methods
 
 func (c *nameClass_) Name(
-	folders []Folder,
+	segments []string,
 ) NameLike {
-	var source string
-	for _, folder := range folders {
-		source += "/" + string(folder)
-	}
+	var source = "/"
+	source += sts.Join(segments, "/")
 	return name_(source)
 }
 
 func (c *nameClass_) NameFromSequence(
-	sequence Sequential[Folder],
+	sequence Sequential[string],
 ) NameLike {
 	return c.Name(sequence.AsArray())
 }
@@ -68,15 +66,15 @@ func (c *nameClass_) Concatenate(
 	first NameLike,
 	second NameLike,
 ) NameLike {
-	var firstFolders = first.AsIntrinsic()
-	var secondFolders = second.AsIntrinsic()
-	var allFolders = make(
-		[]Folder,
-		len(firstFolders)+len(secondFolders),
+	var firstSegments = first.AsIntrinsic()
+	var secondSegments = second.AsIntrinsic()
+	var allSegments = make(
+		[]string,
+		len(firstSegments)+len(secondSegments),
 	)
-	copy(allFolders, firstFolders)
-	copy(allFolders[len(firstFolders):], secondFolders)
-	return c.Name(allFolders)
+	copy(allSegments, firstSegments)
+	copy(allSegments[len(firstSegments):], secondSegments)
+	return c.Name(allSegments)
 }
 
 // INSTANCE INTERFACE
@@ -87,14 +85,11 @@ func (v name_) GetClass() NameClassLike {
 	return nameClass()
 }
 
-func (v name_) AsIntrinsic() []Folder {
+func (v name_) AsIntrinsic() []string {
 	var name = string(v)
-	var strings = sts.Split(name, "/")[1:] // Extract the folders.
-	var folders = make([]Folder, len(strings))
-	for index, folder := range strings {
-		folders[index] = Folder(folder)
-	}
-	return folders
+	var segments = sts.Split(name, "/") // Extract the segments.
+	segments = segments[1:]             // Ignore the empty segment.
+	return segments
 }
 
 func (v name_) AsSource() string {
@@ -103,30 +98,30 @@ func (v name_) AsSource() string {
 
 // Attribute Methods
 
-// Accessible[Folder] Methods
+// Accessible[string] Methods
 
 func (v name_) GetValue(
 	index int,
-) Folder {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
+) string {
+	var segments = v.AsIntrinsic()
+	var size = uti.ArraySize(segments)
 	var goIndex = uti.RelativeToCardinal(index, size)
-	return folders[goIndex]
+	return segments[goIndex]
 }
 
 func (v name_) GetValues(
 	first int,
 	last int,
-) Sequential[Folder] {
-	var folders = v.AsIntrinsic()
-	var size = uti.ArraySize(folders)
+) Sequential[string] {
+	var segments = v.AsIntrinsic()
+	var size = uti.ArraySize(segments)
 	var goFirst = uti.RelativeToCardinal(first, size)
 	var goLast = uti.RelativeToCardinal(last, size)
-	return nameClass().Name(folders[goFirst : goLast+1])
+	return nameClass().Name(segments[goFirst : goLast+1])
 }
 
 func (v name_) GetIndex(
-	value Folder,
+	value string,
 ) int {
 	var index int
 	var iterator = v.GetIterator()
@@ -150,16 +145,16 @@ func (v name_) IsBefore(
 	return sli.Compare(v.AsIntrinsic(), value.AsIntrinsic()) < 0
 }
 
-// Searchable[Folder] Methods
+// Searchable[string] Methods
 
 func (v name_) ContainsValue(
-	value Folder,
+	value string,
 ) bool {
 	return sli.Index(v.AsIntrinsic(), value) > -1
 }
 
 func (v name_) ContainsAny(
-	values Sequential[Folder],
+	values Sequential[string],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -174,7 +169,7 @@ func (v name_) ContainsAny(
 }
 
 func (v name_) ContainsAll(
-	values Sequential[Folder],
+	values Sequential[string],
 ) bool {
 	var iterator = values.GetIterator()
 	for iterator.HasNext() {
@@ -188,7 +183,7 @@ func (v name_) ContainsAll(
 	return true
 }
 
-// Sequential[Folder] Methods
+// Sequential[string] Methods
 
 func (v name_) IsEmpty() bool {
 	return len(v.AsIntrinsic()) == 0
@@ -198,11 +193,11 @@ func (v name_) GetSize() uint {
 	return uti.ArraySize(v.AsIntrinsic())
 }
 
-func (v name_) AsArray() []Folder {
+func (v name_) AsArray() []string {
 	return v.AsIntrinsic()
 }
 
-func (v name_) GetIterator() uti.Ratcheted[Folder] {
+func (v name_) GetIterator() uti.Ratcheted[string] {
 	return uti.Iterator(v.AsIntrinsic())
 }
 
@@ -248,6 +243,6 @@ func nameClass() *nameClass_ {
 var nameClassReference_ = &nameClass_{
 	// Initialize the class constants.
 	matcher_: reg.MustCompile(
-		"^(?:/(?:" + letter_ + "|" + digit_ + "|-)+" + ")+",
+		"^(?:/(?:" + letter_ + "|" + digit_ + ")((-|\\.)?(?:" + letter_ + "|" + digit_ + "))+)+",
 	),
 }
