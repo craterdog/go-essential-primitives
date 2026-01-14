@@ -17,7 +17,6 @@ import (
 	uti "github.com/craterdog/go-essential-utilities/v8"
 	reg "regexp"
 	sli "slices"
-	stc "strconv"
 )
 
 // CLASS INTERFACE
@@ -33,7 +32,7 @@ func IdentifierClass() IdentifierClassLike {
 func (c *identifierClass_) Identifier(
 	characters []rune,
 ) IdentifierLike {
-	return identifier_(stc.Quote(string(characters)))
+	return c.IdentifierFromSource(string(characters))
 }
 
 func (c *identifierClass_) IdentifierFromSequence(
@@ -58,14 +57,11 @@ func (c *identifierClass_) IdentifierFromSource(
 
 // Constant Methods
 
-// Function Methods
-
-func (c *identifierClass_) Concatenate(
-	first IdentifierLike,
-	second IdentifierLike,
-) IdentifierLike {
-	return c.Identifier(uti.CombineArrays(first.AsIntrinsic(), second.AsIntrinsic()))
+func (c *identifierClass_) Undefined() IdentifierLike {
+	return c.undefined_
 }
+
+// Function Methods
 
 // INSTANCE INTERFACE
 
@@ -76,8 +72,7 @@ func (v identifier_) GetClass() IdentifierClassLike {
 }
 
 func (v identifier_) AsIntrinsic() []rune {
-	var unidentifierd, _ = stc.Unquote(string(v)) // Strip off the double identifiers.
-	return []rune(unidentifierd)
+	return []rune(v)
 }
 
 func (v identifier_) AsSource() string {
@@ -199,13 +194,14 @@ func (v identifier_) String() string {
 
 // Instance Structure
 
-type identifier_ string // This type must support the "comparable" type contraint.
+type identifier_ string
 
 // Class Structure
 
 type identifierClass_ struct {
 	// Declare the class constants.
-	matcher_ *reg.Regexp
+	matcher_   *reg.Regexp
+	undefined_ IdentifierLike
 }
 
 // Class Reference
@@ -219,4 +215,5 @@ var identifierClassReference_ = &identifierClass_{
 	matcher_: reg.MustCompile(
 		"^((?:" + letter_ + ")((-)?(?:" + letter_ + "|" + digit_ + "))*)",
 	),
+	undefined_: identifier_(""),
 }

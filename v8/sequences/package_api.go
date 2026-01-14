@@ -121,6 +121,9 @@ type IdentifierClassLike interface {
 	IdentifierFromSource(
 		source string,
 	) IdentifierLike
+
+	// Constant Methods
+	Undefined() IdentifierLike
 }
 
 /*
@@ -231,7 +234,7 @@ symbol-like concrete class.
 type SymbolClassLike interface {
 	// Constructor Methods
 	Symbol(
-		identifier []rune,
+		characters []rune,
 	) SymbolLike
 	SymbolFromSequence(
 		sequence Sequential[rune],

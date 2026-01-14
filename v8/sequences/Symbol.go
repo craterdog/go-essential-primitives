@@ -30,9 +30,9 @@ func SymbolClass() SymbolClassLike {
 // Constructor Methods
 
 func (c *symbolClass_) Symbol(
-	identifier []rune,
+	characters []rune,
 ) SymbolLike {
-	return c.SymbolFromSource("$" + string(identifier))
+	return c.SymbolFromSource("$" + string(characters))
 }
 
 func (c *symbolClass_) SymbolFromSequence(

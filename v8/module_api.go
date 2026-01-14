@@ -572,10 +572,10 @@ func SymbolClass() SymbolClassLike {
 }
 
 func Symbol(
-	identifier []rune,
+	characters []rune,
 ) SymbolLike {
 	return SymbolClass().Symbol(
-		identifier,
+		characters,
 	)
 }
 
