@@ -17,9 +17,10 @@ some useful high-level immutable primitive data types:
  * `Probability`
  * `Resource`
 
-**Strings**
+**Sequences**
  * `Binary`
  * `Bytecode`
+ * `Identifier`
  * `Name`
  * `Narrative`
  * `Pattern`
